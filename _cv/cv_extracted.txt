@@ -1,0 +1,37 @@
+Nguyen Thanh Duy Tan
+AI Engineer Fresher
+Tan Binh District, Ho Chi Minh City | 0339900276 | tanntd.2005@gmail.com | github.com/TanNguyen234
+Career Objective
+Short-term:Join an AI Engineer Intern role, gain hands-on experience in NLP, Computer Vision, and foundational
+MLOps.
+Long-term:Become an AI Engineer specializing in NLP and Computer Vision, with the ability to build and deploy
+ML pipelines.
+Education
+Ho Chi Minh City University of Natural Resources and EnvironmentOct 2023 – Present
+Major: Information Technology GPA: 3.1/4.0
+Skills
+•Machine Learning:Scikit-learn, Pandas, NumPy, Imbalanced Data Handling, EDA.
+•Generative AI & NLP:LLMs, LangGraph, LangChain, Multi-Agent Systems, RAG.
+•MLOps & Software Engineering:FastAPI, Docker, CI/CD (GitHub Actions), Pytest, RESTful APIs.
+•Database & Storage:MongoDB (Motor Async).
+•Tools:Git, GitHub, Jupyter Notebook, Linux.
+•Soft Skills:Problem-solving, system design thinking, self-researching technical docs.
+Projects
+CV AI Evaluation System (Generative AI & LLM)03/2026 – Present
+•Full-stack, multi-agent AI system for automated resume parsing, profiling, and professional evaluation.
+•Designed a LangGraph workflow to run Foundational, Professional, and Project evaluation phases concurrently.
+•Integrated Tavily API (RAG) for market context and a Meta-Evaluator to check cross-agent logic consistency.
+•Built an async FastAPI backend with SSE progress streaming and Base64 CV storage in MongoDB.
+•Added a 5-requests/day rate limiter and AI Spam Validation to filter invalid files and reduce LLM API costs.
+Tech Stack:Python, FastAPI, LangGraph, LangChain, LLMs (Gemini, Qwen), SSE, MongoDB, PyMuPDF4LLM.
+GitHub:github.com/TanNguyen234/CV-Review-System
+End-to-End Fraud Detection Pipeline (Traditional ML & MLOps)05/2026 – Present
+•Production-ready machine learning service to detect credit card fraud with high accuracy.
+•Conducted EDA and trained an XGBoost classifier for a highly imbalanced dataset with only 0.17% fraud cases.
+•Packaged the model into a FastAPI app for single-transaction prediction and batch inference up to 100 transac-
+tions.
+•Containerized the app with Docker and built a GitHub Actions CI/CD pipeline for Ruff linting, testing, and
+image deployment.
+•Wrote unit and integration tests with Pytest, using Pydantic for strict API schema validation.
+Tech Stack:Python, XGBoost, Pandas, Scikit-learn, FastAPI, Docker, GitHub Actions, Pytest.
+GitHub:github.com/TanNguyen234/End-to-End-Fraud-Detection-Pipeline
