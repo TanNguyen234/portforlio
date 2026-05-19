@@ -122,6 +122,7 @@ export const portfolio = {
         "SSE",
       ],
       link: "https://github.com/TanNguyen234/CV-Review-System",
+      demoLink: "https://foxy0505-ai-cv-reviewer.hf.space/app",
     },
     {
       title: "End-to-End Fraud Detection Pipeline",
@@ -153,6 +154,7 @@ export const portfolio = {
         "Pytest",
       ],
       link: "https://github.com/TanNguyen234/End-to-End-Fraud-Detection-Pipeline",
+      demoLink: "",
     },
   ],
   skills: {
@@ -269,6 +271,10 @@ export const portfolio = {
     phoneVi: "0339900276",
     github: "https://github.com/TanNguyen234",
     githubVi: "https://github.com/TanNguyen234",
+    linkedin: "https://www.linkedin.com/in/tannguyen234",
+    linkedinVi: "https://www.linkedin.com/in/tannguyen234",
+    cv: "/Nguyen_Thanh_Duy_Tan_AI_Engineer_Fresher_CV.pdf",
+    cvVi: "/Nguyen_Thanh_Duy_Tan_AI_Engineer_Fresher_CV.pdf",
     location: "Tan Binh District, Ho Chi Minh City",
     locationVi: "Tân Bình, TP. Hồ Chí Minh",
   },

@@ -76,6 +76,12 @@ export const localizePortfolio = (
   if (data.contact.githubVi) {
     localized.contact.github = data.contact.githubVi;
   }
+  if (data.contact.linkedinVi) {
+    localized.contact.linkedin = data.contact.linkedinVi;
+  }
+  if (data.contact.cvVi) {
+    localized.contact.cv = data.contact.cvVi;
+  }
   if (data.contact.locationVi) {
     localized.contact.location = data.contact.locationVi;
   }

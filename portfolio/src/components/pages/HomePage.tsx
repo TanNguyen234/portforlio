@@ -31,7 +31,6 @@ export default function HomePage() {
     { label: t.nav.tech, href: "#tech" },
     { label: t.nav.wins, href: "#achievements" },
     { label: t.nav.contact, href: "#contact" },
-    { label: t.nav.admin, href: "/admin" },
   ];
 
   return (

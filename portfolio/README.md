@@ -23,7 +23,7 @@ Open [http://localhost:3000](http://localhost:3000) to explore the experience.
 - The 3D WebGL scenes are disabled automatically on low-end devices or when reduced motion is preferred.
 - Scroll velocity and cursor trail effects can be tuned inside `src/components/effects`.
 - All content is sourced and rewritten from the CV in `src/lib/portfolio.ts`.
-- Open `/admin` for the local admin dashboard (stored in LocalStorage).
+- The local admin dashboard route is currently disabled.
 
 ## Production Build
 

@@ -62,10 +62,13 @@ export const uiText = {
       view: "View",
       close: "Close",
       visitGithub: "Visit GitHub",
+      visitDemo: "Open demo",
     },
     contact: {
       email: "Email me",
       github: "GitHub",
+      linkedin: "LinkedIn",
+      cv: "Download CV",
     },
     footer: "Crafted in Ho Chi Minh City - 2026",
     skillsFallback: "Lightweight mode is active on this device.",
@@ -132,10 +135,13 @@ export const uiText = {
       view: "Xem",
       close: "Đóng",
       visitGithub: "Mở GitHub",
+      visitDemo: "Mở demo",
     },
     contact: {
       email: "Gửi email",
       github: "GitHub",
+      linkedin: "LinkedIn",
+      cv: "Tải CV",
     },
     footer: "Thiết kế tại TP. Hồ Chí Minh - 2026",
     skillsFallback:
