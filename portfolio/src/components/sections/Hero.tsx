@@ -36,8 +36,8 @@ export default function Hero({
     const handleMove = (event: MouseEvent) => {
       const x = (event.clientX / window.innerWidth - 0.5) * 2;
       const y = (event.clientY / window.innerHeight - 0.5) * 2;
-      xTo(x.toFixed(3));
-      yTo(y.toFixed(3));
+      xTo(Number(x.toFixed(3)));
+      yTo(Number(y.toFixed(3)));
     };
 
     window.addEventListener("mousemove", handleMove);
