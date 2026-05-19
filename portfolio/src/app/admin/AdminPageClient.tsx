@@ -82,6 +82,7 @@ const AdminEditor = ({
         highlightsVi: ["Điểm nhấn chính"],
         stack: ["Tech"],
         link: "https://github.com/",
+        demoLink: ""
       });
       return next;
     });

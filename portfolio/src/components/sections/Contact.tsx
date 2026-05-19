@@ -32,6 +32,16 @@ export default function Contact({
             >
               {data.contact.github}
             </a>
+            {data.contact.linkedin ? (
+              <a
+                href={data.contact.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[color:var(--accent-current)]"
+              >
+                {ui.contact.linkedin}
+              </a>
+            ) : null}
           </div>
           <div className="flex flex-wrap gap-4">
             <MagneticButton
