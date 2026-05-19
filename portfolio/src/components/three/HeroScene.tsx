@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, extend, ReactThreeFiber, useFrame } from "@react-three/fiber";
+import { Canvas, extend, useFrame, type ThreeElement } from "@react-three/fiber";
 import { Float, shaderMaterial } from "@react-three/drei";
 import { Color, Mesh, Points, Vector3 } from "three";
 import { useMemo, useRef } from "react";
@@ -42,14 +42,9 @@ const AuroraMaterial = shaderMaterial(
 
 extend({ AuroraMaterial });
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      auroraMaterial: ReactThreeFiber.MaterialNode<
-        typeof AuroraMaterial,
-        typeof AuroraMaterial
-      >;
-    }
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    auroraMaterial: ThreeElement<typeof AuroraMaterial>;
   }
 }
 
