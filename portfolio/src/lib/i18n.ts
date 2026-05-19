@@ -144,4 +144,8 @@ export const uiText = {
 } as const;
 
 export type Locale = keyof typeof uiText;
-export type UiText = (typeof uiText)["en"];
+type DeepString<T> = {
+  [K in keyof T]: T[K] extends string ? string : DeepString<T[K]>;
+};
+
+export type UiText = DeepString<(typeof uiText)["en"]>;
