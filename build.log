@@ -1,0 +1,22 @@
+
+> myportforlio@0.1.0 build
+> next build
+
+▲ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 16.3s
+  Running TypeScript ...
+Failed to type check.
+
+./portfolio/src/components/three/HeroScene.tsx:91:10
+Type error: Property 'args' is missing in type '{ attach: string; count: number; array: Float32Array<ArrayBuffer>; itemSize: number; }' but required in type 'Mutable<Overwrite<Partial<Overwrite<BufferAttribute<BufferAttributeEventMap>, MathProps<BufferAttribute<BufferAttributeEventMap>> & ReactProps<...>>>, Omit<...>>>'.
+
+  [90m89 |[0m     <points ref={pointsRef}>
+  [90m90 |[0m       <bufferGeometry>
+[31m[1m>[0m [90m91 |[0m         <bufferAttribute
+  [90m   |[0m          [31m[1m^[0m
+  [90m92 |[0m           attach=[32m"attributes-position"[0m
+  [90m93 |[0m           count={positions.length / [35m3[0m}
+  [90m94 |[0m           array={positions}
+Next.js build worker exited with code: 1 and signal: null

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
 import type { PortfolioData } from "@/lib/portfolio";
 import { usePortfolioData } from "@/lib/usePortfolioData";
 
@@ -32,13 +33,18 @@ const updateByPath = (
   return next as PortfolioData;
 };
 
-export default function AdminPage() {
-  const { data, updatePortfolio, resetToDefault } = usePortfolioData();
-  const [draft, setDraft] = useState<PortfolioData>(clone(data));
+type AdminEditorProps = {
+  data: PortfolioData;
+  updatePortfolio: (next: PortfolioData) => void;
+  resetToDefault: () => void;
+};
 
-  useEffect(() => {
-    setDraft(clone(data));
-  }, [data]);
+const AdminEditor = ({
+  data,
+  updatePortfolio,
+  resetToDefault,
+}: AdminEditorProps) => {
+  const [draft, setDraft] = useState<PortfolioData>(() => clone(data));
 
   const updateField = (path: Array<string | number>, value: string) => {
     setDraft((prev) => updateByPath(prev, path, value));
@@ -68,9 +74,12 @@ export default function AdminPage() {
       const next = clone(prev);
       next.projects.push({
         title: "New Project",
+        titleVi: "Dự án mới",
         period: "2026",
         description: "Short cinematic project description.",
+        descriptionVi: "Mô tả ngắn gọn, giàu hình ảnh cho dự án.",
         highlights: ["Key highlight"],
+        highlightsVi: ["Điểm nhấn chính"],
         stack: ["Tech"],
         link: "https://github.com/",
       });
@@ -109,12 +118,12 @@ export default function AdminPage() {
               Lưu dữ liệu vào LocalStorage. Không cần backend.
             </p>
           </div>
-          <a
+          <Link
             href="/"
             className="rounded-full border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.3em] text-white/70"
           >
             Back to site
-          </a>
+          </Link>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -395,5 +404,19 @@ export default function AdminPage() {
         </div>
       </div>
     </main>
+  );
+};
+
+export default function AdminPage() {
+  const { data, updatePortfolio, resetToDefault } = usePortfolioData();
+  const dataKey = useMemo(() => JSON.stringify(data), [data]);
+
+  return (
+    <AdminEditor
+      key={dataKey}
+      data={data}
+      updatePortfolio={updatePortfolio}
+      resetToDefault={resetToDefault}
+    />
   );
 }
