@@ -70,10 +70,15 @@ function ParticleField() {
   const positions = useMemo(() => {
     const count = 420;
     const array = new Float32Array(count * 3);
+    const pseudoRandom = (seed: number) => {
+      const value = Math.sin(seed) * 10000;
+      return value - Math.floor(value);
+    };
     for (let i = 0; i < count; i += 1) {
-      array[i * 3] = (Math.random() - 0.5) * 10;
-      array[i * 3 + 1] = (Math.random() - 0.5) * 6;
-      array[i * 3 + 2] = (Math.random() - 0.5) * 6;
+      const base = i + 1;
+      array[i * 3] = (pseudoRandom(base * 1.23) - 0.5) * 10;
+      array[i * 3 + 1] = (pseudoRandom(base * 4.56) - 0.5) * 6;
+      array[i * 3 + 2] = (pseudoRandom(base * 7.89) - 0.5) * 6;
     }
     return array;
   }, []);
@@ -90,9 +95,7 @@ function ParticleField() {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial size={0.03} color="#7cf4ff" opacity={0.6} transparent />
