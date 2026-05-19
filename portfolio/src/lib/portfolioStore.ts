@@ -16,25 +16,26 @@ const mergeDeep = <T extends Record<string, unknown>>(
   override: Record<string, unknown>
 ): T => {
   const result = { ...base } as T;
+  const writableResult = result as Record<string, unknown>;
 
   Object.keys(override).forEach((key) => {
-    const baseValue = result[key];
+    const baseValue = writableResult[key];
     const overrideValue = override[key];
 
     if (Array.isArray(overrideValue)) {
-      result[key] = overrideValue as T[Extract<keyof T, string>];
+      writableResult[key] = overrideValue;
       return;
     }
 
     if (isObject(baseValue) && isObject(overrideValue)) {
-      result[key] = mergeDeep(
+      writableResult[key] = mergeDeep(
         baseValue as Record<string, unknown>,
         overrideValue
-      ) as T[Extract<keyof T, string>];
+      );
       return;
     }
 
-    result[key] = overrideValue as T[Extract<keyof T, string>];
+    writableResult[key] = overrideValue;
   });
 
   return result;

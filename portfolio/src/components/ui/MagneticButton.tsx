@@ -28,7 +28,8 @@ export default function MagneticButton({
     const xTo = gsap.quickTo(element, "x", { duration: 0.4, ease: "power3" });
     const yTo = gsap.quickTo(element, "y", { duration: 0.4, ease: "power3" });
 
-    const handleMove = (event: MouseEvent) => {
+    const handleMove = (event: Event) => {
+      if (!(event instanceof MouseEvent)) return;
       const rect = element.getBoundingClientRect();
       const relX = event.clientX - rect.left - rect.width / 2;
       const relY = event.clientY - rect.top - rect.height / 2;
