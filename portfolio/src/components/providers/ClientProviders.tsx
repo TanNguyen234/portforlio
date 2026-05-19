@@ -24,7 +24,6 @@ export default function ClientProviders({
     const lenis = new Lenis({
       lerp: 0.08,
       smoothWheel: true,
-      smoothTouch: true,
       syncTouch: true,
     });
 
