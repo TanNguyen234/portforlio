@@ -13,22 +13,24 @@ export default function GridDistortion() {
     const xTo = gsap.quickTo(grid, "--grid-x", {
       duration: 0.6,
       ease: "power3",
+      units: "%",
     });
     const yTo = gsap.quickTo(grid, "--grid-y", {
       duration: 0.6,
       ease: "power3",
+      units: "%",
     });
 
     const handleMove = (event: MouseEvent) => {
       const x = (event.clientX / window.innerWidth) * 100;
       const y = (event.clientY / window.innerHeight) * 100;
-      xTo(`${x}%`);
-      yTo(`${y}%`);
+      xTo(x);
+      yTo(y);
     };
 
     const handleLeave = () => {
-      xTo("50%");
-      yTo("30%");
+      xTo(50);
+      yTo(30);
     };
 
     window.addEventListener("mousemove", handleMove);
