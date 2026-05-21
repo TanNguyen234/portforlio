@@ -1,5 +1,6 @@
-import { notFound } from "next/navigation";
+import AdminPageClient from "./AdminPageClient";
 
 export default function AdminPage() {
-  notFound();
+  return <AdminPageClient />;
 }
+
