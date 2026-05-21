@@ -6,6 +6,7 @@ import gsap from "gsap";
 import HeroScene from "@/components/three/HeroScene";
 import AnimatedText from "@/components/ui/AnimatedText";
 import MagneticButton from "@/components/ui/MagneticButton";
+import { Eye, Mail, Terminal, Cpu, MapPin } from "lucide-react";
 import { usePerformanceMode } from "@/lib/performance";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
@@ -85,30 +86,37 @@ export default function Hero({
         </motion.p>
 
         <div className="flex flex-wrap gap-4">
-          <MagneticButton className="depth-1 parallax-layer" href="#projects">
+          <MagneticButton className="depth-1 parallax-layer flex items-center gap-2" href="#projects">
+            <Eye className="h-4 w-4" />
             {ui.hero.ctaPrimary}
           </MagneticButton>
           <MagneticButton
-            className="depth-2 parallax-layer border-white/30 bg-transparent"
+            className="depth-2 parallax-layer border-white/30 bg-transparent flex items-center gap-2"
             href="#contact"
           >
+            <Mail className="h-4 w-4" />
             {ui.hero.ctaSecondary}
           </MagneticButton>
         </div>
 
         <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.3em] text-white/60">
-          {data.hero.highlights.map((item, index) => (
-            <motion.span
-              key={item}
-              className="rounded-full border border-white/10 bg-white/5 px-4 py-2"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + index * 0.08, duration: 0.6 }}
-            >
-              {item}
-            </motion.span>
-          ))}
+          {data.hero.highlights.map((item, index) => {
+            const Icon = index === 0 ? Terminal : index === 1 ? Cpu : MapPin;
+            return (
+              <motion.span
+                key={item}
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + index * 0.08, duration: 0.6 }}
+              >
+                <Icon className="h-3.5 w-3.5 text-[#7cf4ff]" />
+                {item}
+              </motion.span>
+            );
+          })}
         </div>
+
 
         <div className="absolute right-10 top-32 hidden flex-col gap-4 lg:flex">
           {data.techStack.slice(0, 5).map((item, index) => (

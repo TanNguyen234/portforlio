@@ -16,6 +16,9 @@ import { usePortfolioData } from "@/lib/usePortfolioData";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { uiText } from "@/lib/i18n";
 import { localizePortfolio } from "@/lib/portfolioLocale";
+import { FileText } from "lucide-react";
+import { Github, Linkedin } from "@/components/icons/BrandIcons";
+
 
 export default function HomePage() {
   const { data } = usePortfolioData();
@@ -41,17 +44,39 @@ export default function HomePage() {
 
       <header className="fixed top-0 z-40 w-full border-b border-white/5 bg-black/40 backdrop-blur">
         <div className="section-inner flex items-center justify-between py-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between w-full md:w-auto gap-3">
             <div className="text-xs uppercase tracking-[0.4em] text-white/70">
               {localizedData.hero.name}
             </div>
-            <button
-              type="button"
-              onClick={toggleLocale}
-              className="rounded-full border border-white/15 px-3 py-2 text-[10px] uppercase tracking-[0.3em] text-white/70 transition hover:border-white/40 md:hidden"
-            >
-              {locale === "en" ? "VI" : "EN"}
-            </button>
+            <div className="flex items-center gap-4 md:hidden">
+              <a
+                href={localizedData.contact.github}
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/60 hover:text-white transition-colors"
+                aria-label="GitHub"
+              >
+                <Github className="h-4 w-4" />
+              </a>
+              {localizedData.contact.linkedin ? (
+                <a
+                  href={localizedData.contact.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-white/60 hover:text-white transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              ) : null}
+              <button
+                type="button"
+                onClick={toggleLocale}
+                className="rounded-full border border-white/15 px-2.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-white/70 transition hover:border-white/40"
+              >
+                {locale === "en" ? "VI" : "EN"}
+              </button>
+            </div>
           </div>
           <nav className="hidden items-center gap-6 text-xs uppercase tracking-[0.3em] text-white/60 md:flex">
             {navItems.map((item) => (
@@ -63,6 +88,42 @@ export default function HomePage() {
                 {item.label}
               </a>
             ))}
+            <div className="h-4 w-px bg-white/10" />
+            <div className="flex items-center gap-4">
+              <a
+                href={localizedData.contact.github}
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/60 hover:text-white transition-colors"
+                aria-label="GitHub"
+              >
+                <Github className="h-4 w-4" />
+              </a>
+              {localizedData.contact.linkedin ? (
+                <a
+                  href={localizedData.contact.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-white/60 hover:text-white transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              ) : null}
+              {localizedData.contact.cv ? (
+                <a
+                  href={localizedData.contact.cv}
+                  download
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70 transition hover:border-white/30 hover:bg-white/10"
+                  aria-label="Download CV"
+                >
+                  <FileText className="h-3 w-3" />
+                  <span>CV</span>
+                </a>
+              ) : null}
+            </div>
             <button
               type="button"
               onClick={toggleLocale}
@@ -73,6 +134,7 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
+
 
       <AnimatePresence mode="wait">
         <motion.main

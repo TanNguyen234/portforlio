@@ -5,7 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlassBadge from "@/components/ui/GlassBadge";
 import MagneticButton from "@/components/ui/MagneticButton";
+import ThreeDCard from "@/components/ui/ThreeDCard";
+import { ExternalLink, Eye, ChevronRight } from "lucide-react";
+import { Github } from "@/components/icons/BrandIcons";
 import type { PortfolioData } from "@/lib/portfolio";
+
 import type { UiText } from "@/lib/i18n";
 
 export default function ProjectsShowcase({
@@ -32,11 +36,9 @@ export default function ProjectsShowcase({
 
         <div className="grid gap-6 lg:grid-cols-2">
           {data.projects.map((project, index) => (
-            <motion.article
+            <ThreeDCard
               key={project.title}
               className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 transition-all duration-500 hover:border-white/30 hover:bg-white/10"
-              style={{ perspective: 1200, transformStyle: "preserve-3d" }}
-              whileHover={{ y: -8, rotateX: 6, rotateY: -6 }}
               onClick={() => setActive(index)}
             >
               <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
@@ -61,15 +63,16 @@ export default function ProjectsShowcase({
                   ))}
                 </div>
                 <div className="mt-auto flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-[0.4em] text-[color:var(--accent-current)]">
+                  <span className="inline-flex items-center gap-1 text-xs uppercase tracking-[0.4em] text-[color:var(--accent-current)]">
                     {ui.projects.expand}
+                    <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                   </span>
                   <MagneticButton className="border-white/20 bg-transparent text-[10px]">
                     {ui.projects.view}
                   </MagneticButton>
                 </div>
               </div>
-            </motion.article>
+            </ThreeDCard>
           ))}
         </div>
       </div>
@@ -77,14 +80,14 @@ export default function ProjectsShowcase({
       <AnimatePresence>
         {active !== null ? (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-6"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setActive(null)}
           >
             <motion.div
-              className="max-w-2xl rounded-3xl border border-white/10 bg-[rgba(5,8,14,0.92)] p-8 text-white shadow-2xl"
+              className="max-w-2xl w-full rounded-3xl border border-white/10 bg-[rgba(5,8,14,0.95)] p-8 text-white shadow-2xl"
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.96, opacity: 0 }}
@@ -101,7 +104,7 @@ export default function ProjectsShowcase({
                     </h3>
                   </div>
                   <button
-                    className="rounded-full border border-white/20 px-3 py-1 text-xs uppercase tracking-[0.3em] text-white/70"
+                    className="rounded-full border border-white/20 px-3 py-1 text-xs uppercase tracking-[0.3em] text-white/70 hover:bg-white/10 hover:text-white transition-colors"
                     onClick={() => setActive(null)}
                     type="button"
                   >
@@ -113,9 +116,9 @@ export default function ProjectsShowcase({
                 </p>
                 <ul className="grid gap-3 text-sm text-white/60">
                   {data.projects[active].highlights.map((highlight) => (
-                    <li key={highlight} className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent-current)]" />
-                      {highlight}
+                    <li key={highlight} className="flex items-start gap-3">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent-current)]" />
+                      <span>{highlight}</span>
                     </li>
                   ))}
                 </ul>
@@ -124,14 +127,28 @@ export default function ProjectsShowcase({
                     <GlassBadge key={item} label={item} />
                   ))}
                 </div>
-                <a
-                  href={data.projects[active].link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs uppercase tracking-[0.4em] text-[color:var(--accent-current)]"
-                >
-                  {ui.projects.visitGithub}
-                </a>
+                <div className="flex flex-wrap gap-6 pt-4 border-t border-white/10">
+                  <a
+                    href={data.projects[active].link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-[color:var(--accent-current)] hover:text-white transition-colors"
+                  >
+                    <Github className="h-4 w-4" />
+                    {ui.projects.visitGithub}
+                  </a>
+                  {data.projects[active].demoLink ? (
+                    <a
+                      href={data.projects[active].demoLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-[#7cf4ff] hover:text-white transition-colors"
+                    >
+                      <Eye className="h-4 w-4" />
+                      {ui.projects.visitDemo}
+                    </a>
+                  ) : null}
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -140,3 +157,4 @@ export default function ProjectsShowcase({
     </section>
   );
 }
+

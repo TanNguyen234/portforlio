@@ -1,19 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
 import TechIcon from "@/components/icons/TechIcon";
+import ThreeDCard from "@/components/ui/ThreeDCard";
 
 export default function TechIconCard({ label }: { label: string }) {
   return (
-    <motion.div
-      className="icon-orbit"
-      whileHover={{ rotateX: -8, rotateY: 12, y: -6 }}
-      transition={{ type: "spring", stiffness: 120, damping: 12 }}
-    >
+    <ThreeDCard className="icon-orbit">
       <div className="icon-orbit-inner">
         <TechIcon label={label} />
         <span className="icon-orbit-label">{label}</span>
       </div>
-    </motion.div>
+    </ThreeDCard>
   );
 }
+

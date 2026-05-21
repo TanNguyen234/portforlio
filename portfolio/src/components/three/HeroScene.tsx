@@ -85,9 +85,12 @@ function ParticleField() {
 
   useFrame(({ clock, mouse }) => {
     if (!pointsRef.current) return;
-    pointsRef.current.rotation.y = clock.getElapsedTime() * 0.05;
+    const scrollY = typeof window !== "undefined" ? window.scrollY : 0;
+    // Rotate and shift particles based on scroll
+    pointsRef.current.rotation.y = clock.getElapsedTime() * 0.05 + scrollY * 0.0006;
+    pointsRef.current.rotation.x = scrollY * 0.0002;
     pointsRef.current.position.x = mouse.x * 0.3;
-    pointsRef.current.position.y = mouse.y * 0.2;
+    pointsRef.current.position.y = mouse.y * 0.2 - scrollY * 0.001;
   });
 
   return (
@@ -109,9 +112,11 @@ function FloatingOrbs() {
 
   useFrame(({ clock, mouse }) => {
     if (!orb.current) return;
-    target.set(mouse.x * 0.8, mouse.y * 0.4, 0);
+    const scrollY = typeof window !== "undefined" ? window.scrollY : 0;
+    // Lerp orb position based on mouse and push it away/down on scroll
+    target.set(mouse.x * 0.8 + 1.4, mouse.y * 0.4 + 0.2 - scrollY * 0.002, -scrollY * 0.001);
     orb.current.position.lerp(target, 0.05);
-    orb.current.rotation.y = clock.getElapsedTime() * 0.2;
+    orb.current.rotation.y = clock.getElapsedTime() * 0.2 + scrollY * 0.003;
   });
 
   return (
@@ -130,6 +135,17 @@ function FloatingOrbs() {
   );
 }
 
+function CameraController() {
+  useFrame(({ camera }) => {
+    const scrollY = typeof window !== "undefined" ? window.scrollY : 0;
+    // Smoothly shift camera depth and angle based on scroll
+    camera.position.z = 6 + scrollY * 0.001;
+    camera.position.y = -scrollY * 0.0005;
+    camera.rotation.x = -scrollY * 0.0001;
+  });
+  return null;
+}
+
 export default function HeroScene() {
   return (
     <Canvas
@@ -140,9 +156,11 @@ export default function HeroScene() {
       <ambientLight intensity={0.6} />
       <pointLight position={[4, 2, 6]} intensity={1.2} color="#7cf4ff" />
       <pointLight position={[-6, -2, 3]} intensity={0.8} color="#ffb869" />
+      <CameraController />
       <AuroraPlane />
       <ParticleField />
       <FloatingOrbs />
     </Canvas>
   );
 }
+
