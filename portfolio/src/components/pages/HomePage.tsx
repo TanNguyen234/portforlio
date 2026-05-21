@@ -9,8 +9,6 @@ import About from "@/components/sections/About";
 import ExperienceTimeline from "@/components/sections/ExperienceTimeline";
 import ProjectsShowcase from "@/components/sections/ProjectsShowcase";
 import SkillsConstellation from "@/components/sections/SkillsConstellation";
-import TechStack from "@/components/sections/TechStack";
-import Achievements from "@/components/sections/Achievements";
 import Contact from "@/components/sections/Contact";
 import { usePortfolioData } from "@/lib/usePortfolioData";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -31,8 +29,6 @@ export default function HomePage() {
     { label: t.nav.experience, href: "#experience" },
     { label: t.nav.projects, href: "#projects" },
     { label: t.nav.skills, href: "#skills" },
-    { label: t.nav.tech, href: "#tech" },
-    { label: t.nav.wins, href: "#achievements" },
     { label: t.nav.contact, href: "#contact" },
   ];
 
@@ -149,8 +145,6 @@ export default function HomePage() {
           <ExperienceTimeline data={localizedData} ui={t} />
           <ProjectsShowcase data={localizedData} ui={t} />
           <SkillsConstellation data={localizedData} ui={t} />
-          <TechStack data={localizedData} ui={t} />
-          <Achievements data={localizedData} ui={t} />
           <Contact data={localizedData} ui={t} />
 
           <footer className="section-inner py-12 text-xs uppercase tracking-[0.4em] text-white/40">

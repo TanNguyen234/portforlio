@@ -116,25 +116,6 @@ export default function Hero({
             );
           })}
         </div>
-
-
-        <div className="absolute right-10 top-32 hidden flex-col gap-4 lg:flex">
-          {data.techStack.slice(0, 5).map((item, index) => (
-            <motion.div
-              key={item}
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs uppercase tracking-[0.3em] text-white/70 shadow-lg"
-              animate={{ y: [0, -10, 0] }}
-              transition={{
-                duration: 4 + index,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: index * 0.2,
-              }}
-            >
-              {item}
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   );
