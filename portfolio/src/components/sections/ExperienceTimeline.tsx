@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
+import CyberCard from "@/components/ui/CyberCard";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -24,7 +25,7 @@ export default function ExperienceTimeline({
   return (
     <section
       id="experience"
-      data-accent="#7cf4ff"
+      data-accent="#bc13fe"
       className="section-shell"
       ref={ref}
     >
@@ -45,7 +46,7 @@ export default function ExperienceTimeline({
           <div className="flex flex-col gap-6">
             {data.experience.map((item) => (
               <Reveal key={item.role}>
-                <div className="glass-card rounded-3xl p-6 md:p-8">
+                <CyberCard accentColor="#bc13fe" className="w-full">
                   <div className="flex flex-col gap-4">
                     <p className="text-xs uppercase tracking-[0.3em] text-white/60">
                       {item.period}
@@ -63,7 +64,7 @@ export default function ExperienceTimeline({
                       ))}
                     </ul>
                   </div>
-                </div>
+                </CyberCard>
               </Reveal>
             ))}
           </div>

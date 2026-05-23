@@ -49,12 +49,12 @@ export default function Hero({
     <section
       ref={heroRef}
       id="hero"
-      data-accent="#7cf4ff"
+      data-accent="#00f0ff"
       className="relative min-h-[92vh] overflow-hidden border-b border-white/5"
     >
       <div className="absolute inset-0">
         {isLowEnd ? (
-          <div className="h-full w-full bg-[radial-gradient(circle_at_top,_rgba(124,244,255,0.15),_transparent_60%)]" />
+          <div className="h-full w-full bg-[radial-gradient(circle_at_top,_rgba(0,240,255,0.15),_transparent_60%)]" />
         ) : (
           <HeroScene />
         )}
@@ -69,7 +69,9 @@ export default function Hero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          {data.hero.role}
+          <span className="cyber-glitch-text font-bold" data-text={data.hero.role}>
+            {data.hero.role}
+          </span>
         </motion.p>
 
         <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-7xl leading-tight text-white">
@@ -86,15 +88,18 @@ export default function Hero({
         </motion.p>
 
         <div className="flex flex-wrap gap-4">
-          <MagneticButton className="depth-1 parallax-layer flex items-center gap-2" href="#projects">
-            <Eye className="h-4 w-4" />
+          <MagneticButton 
+            className="depth-1 parallax-layer flex items-center gap-2 border-[#00f0ff]/30 text-white hover:border-[#00f0ff]/80 hover:shadow-[0_0_15px_rgba(0,240,255,0.25)]" 
+            href="#projects"
+          >
+            <Eye className="h-4 w-4 text-[#00f0ff]" />
             {ui.hero.ctaPrimary}
           </MagneticButton>
           <MagneticButton
-            className="depth-2 parallax-layer border-white/30 bg-transparent flex items-center gap-2"
+            className="depth-2 parallax-layer border-[#ff007f]/30 bg-transparent flex items-center gap-2 hover:border-[#ff007f]/80 hover:shadow-[0_0_15px_rgba(255,0,127,0.25)]"
             href="#contact"
           >
-            <Mail className="h-4 w-4" />
+            <Mail className="h-4 w-4 text-[#ff007f]" />
             {ui.hero.ctaSecondary}
           </MagneticButton>
         </div>
@@ -110,7 +115,7 @@ export default function Hero({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + index * 0.08, duration: 0.6 }}
               >
-                <Icon className="h-3.5 w-3.5 text-[#7cf4ff]" />
+                <Icon className="h-3.5 w-3.5 text-[#00f0ff]" />
                 {item}
               </motion.span>
             );

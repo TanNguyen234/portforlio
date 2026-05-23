@@ -1,4 +1,4 @@
-import GlassCard from "@/components/ui/GlassCard";
+import CyberCard from "@/components/ui/CyberCard";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { GraduationCap, BookOpen, Calendar, Award } from "lucide-react";
@@ -15,7 +15,7 @@ export default function About({
   return (
     <section
       id="about"
-      data-accent="#7cffc2"
+      data-accent="#ffe600"
       className="section-shell"
     >
       <div className="section-inner grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
@@ -31,7 +31,7 @@ export default function About({
             </p>
           </Reveal>
         </div>
-        <GlassCard className="flex flex-col gap-6 relative overflow-hidden">
+        <CyberCard accentColor="#ffe600" className="flex flex-col gap-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/5 rounded-full blur-2xl pointer-events-none" />
           <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-[color:var(--accent-current)] relative z-10">
             <GraduationCap className="h-4.5 w-4.5" />
@@ -56,7 +56,7 @@ export default function About({
               </p>
             </div>
           </div>
-        </GlassCard>
+        </CyberCard>
       </div>
     </section>
   );

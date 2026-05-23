@@ -9,10 +9,10 @@ import { useMemo, useRef } from "react";
 const AuroraMaterial = shaderMaterial(
   {
     uTime: 0,
-    uColor1: new Color("#0b1e2d"),
-    uColor2: new Color("#102a3a"),
-    uColor3: new Color("#173f48"),
-    uIntensity: 0.9,
+    uColor1: new Color("#050014"),
+    uColor2: new Color("#3b0066"),
+    uColor3: new Color("#ff007f"),
+    uIntensity: 1.1,
   },
   `varying vec2 vUv;
    void main() {
@@ -101,7 +101,7 @@ function ParticleField() {
           args={[positions, 3]}
         />
       </bufferGeometry>
-      <pointsMaterial size={0.03} color="#7cf4ff" opacity={0.6} transparent />
+      <pointsMaterial size={0.035} color="#ff007f" opacity={0.75} transparent />
     </points>
   );
 }
@@ -124,11 +124,11 @@ function FloatingOrbs() {
       <mesh ref={orb} position={[1.4, 0.2, 0]}>
         <sphereGeometry args={[0.45, 48, 48]} />
         <meshStandardMaterial
-          color="#7cffc2"
-          emissive="#5debd6"
-          emissiveIntensity={0.35}
-          roughness={0.2}
-          metalness={0.6}
+          color="#00f0ff"
+          emissive="#00f0ff"
+          emissiveIntensity={0.6}
+          roughness={0.15}
+          metalness={0.8}
         />
       </mesh>
     </Float>
@@ -153,9 +153,9 @@ export default function HeroScene() {
       camera={{ position: [0, 0, 6], fov: 45 }}
       gl={{ antialias: true, alpha: true }}
     >
-      <ambientLight intensity={0.6} />
-      <pointLight position={[4, 2, 6]} intensity={1.2} color="#7cf4ff" />
-      <pointLight position={[-6, -2, 3]} intensity={0.8} color="#ffb869" />
+      <ambientLight intensity={0.4} />
+      <pointLight position={[4, 2, 6]} intensity={1.6} color="#00f0ff" />
+      <pointLight position={[-6, -2, 3]} intensity={1.2} color="#ff007f" />
       <CameraController />
       <AuroraPlane />
       <ParticleField />

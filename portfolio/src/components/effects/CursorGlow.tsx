@@ -35,7 +35,7 @@ export default function CursorGlow() {
   return (
     <div
       ref={glowRef}
-      className="pointer-events-none fixed left-1/2 top-1/2 z-30 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(124,244,255,0.18),_transparent_60%)] blur-3xl"
+      className="pointer-events-none fixed left-1/2 top-1/2 z-30 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_var(--accent-glow),_transparent_60%)] blur-3xl"
       aria-hidden="true"
     />
   );

@@ -1,5 +1,6 @@
 import SectionHeading from "@/components/ui/SectionHeading";
 import SkillField from "@/components/skills/SkillField";
+import CyberCard from "@/components/ui/CyberCard";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -13,7 +14,7 @@ export default function SkillsConstellation({
   return (
     <section
       id="skills"
-      data-accent="#7cf4ff"
+      data-accent="#39ff14"
       className="section-shell"
     >
       <div className="section-inner grid gap-12">
@@ -28,9 +29,10 @@ export default function SkillsConstellation({
           </div>
           <div className="flex flex-col gap-6">
             {data.skills.categories.map((category) => (
-              <div
+              <CyberCard
                 key={category.title}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+                accentColor="#39ff14"
+                className="w-full"
               >
                 <h3 className="text-lg font-semibold text-white">
                   {category.title}
@@ -40,7 +42,7 @@ export default function SkillsConstellation({
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-              </div>
+              </CyberCard>
             ))}
           </div>
         </div>

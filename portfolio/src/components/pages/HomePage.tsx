@@ -16,6 +16,7 @@ import { uiText } from "@/lib/i18n";
 import { localizePortfolio } from "@/lib/portfolioLocale";
 import { FileText } from "lucide-react";
 import { Github, Linkedin } from "@/components/icons/BrandIcons";
+import MatrixText from "@/components/ui/MatrixText";
 
 
 export default function HomePage() {
@@ -42,7 +43,7 @@ export default function HomePage() {
         <div className="section-inner flex items-center justify-between py-4">
           <div className="flex items-center justify-between w-full md:w-auto gap-3">
             <div className="text-xs uppercase tracking-[0.4em] text-white/70">
-              {localizedData.hero.name}
+              <MatrixText text={localizedData.hero.name} triggerOnHover={true} />
             </div>
             <div className="flex items-center gap-4 md:hidden">
               <a
@@ -81,7 +82,7 @@ export default function HomePage() {
                 href={item.href}
                 className="transition-colors hover:text-white"
               >
-                {item.label}
+                <MatrixText text={item.label} triggerOnHover={true} />
               </a>
             ))}
             <div className="h-4 w-px bg-white/10" />

@@ -1,4 +1,4 @@
-import GlassCard from "@/components/ui/GlassCard";
+import CyberCard from "@/components/ui/CyberCard";
 import MagneticButton from "@/components/ui/MagneticButton";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { Mail, Phone, MapPin, Download } from "lucide-react";
@@ -15,14 +15,14 @@ export default function Contact({
   ui: UiText;
 }) {
   return (
-    <section id="contact" data-accent="#7cf4ff" className="section-shell">
+    <section id="contact" data-accent="#00f0ff" className="section-shell">
       <div className="section-inner grid gap-12">
         <SectionHeading
           eyebrow={ui.sections.contact.eyebrow}
           title={ui.sections.contact.title}
           description={ui.sections.contact.description}
         />
-        <GlassCard className="flex flex-col gap-6 relative overflow-hidden">
+        <CyberCard accentColor="#00f0ff" className="flex flex-col gap-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
           <div className="grid gap-4 text-sm text-white/70 relative z-10">
             <div className="flex items-center gap-3">
@@ -82,7 +82,7 @@ export default function Contact({
               </MagneticButton>
             ) : null}
           </div>
-        </GlassCard>
+        </CyberCard>
       </div>
     </section>
   );

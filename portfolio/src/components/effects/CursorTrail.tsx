@@ -74,7 +74,9 @@ export default function CursorTrail() {
         }
 
         ctx.beginPath();
-        ctx.fillStyle = `rgba(124, 244, 255, ${p.life * 0.35})`;
+        ctx.fillStyle = i % 2 === 0 
+          ? `rgba(0, 240, 255, ${p.life * 0.45})`
+          : `rgba(255, 0, 127, ${p.life * 0.45})`;
         ctx.arc(p.x, p.y, 3 + (1 - p.life) * 6, 0, Math.PI * 2);
         ctx.fill();
       }

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import { Orbitron, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ClientProviders from "@/components/providers/ClientProviders";
 
-const displayFont = Bodoni_Moda({
+const displayFont = Orbitron({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 const bodyFont = IBM_Plex_Sans({

@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlassBadge from "@/components/ui/GlassBadge";
 import MagneticButton from "@/components/ui/MagneticButton";
-import ThreeDCard from "@/components/ui/ThreeDCard";
+import CyberCard from "@/components/ui/CyberCard";
 import { ExternalLink, Eye, ChevronRight } from "lucide-react";
 import { Github } from "@/components/icons/BrandIcons";
 import type { PortfolioData } from "@/lib/portfolio";
@@ -24,7 +24,7 @@ export default function ProjectsShowcase({
   return (
     <section
       id="projects"
-      data-accent="#ffb869"
+      data-accent="#ff007f"
       className="section-shell"
     >
       <div className="section-inner grid gap-12">
@@ -36,15 +36,12 @@ export default function ProjectsShowcase({
 
         <div className="grid gap-6 lg:grid-cols-2">
           {data.projects.map((project, index) => (
-            <ThreeDCard
+            <CyberCard
               key={project.title}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 transition-all duration-500 hover:border-white/30 hover:bg-white/10"
+              accentColor="#ff007f"
               onClick={() => setActive(index)}
             >
-              <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.1),_transparent_70%)]" />
-              </div>
-              <div className="relative z-10 flex h-full flex-col gap-5">
+              <div className="flex h-full flex-col gap-5">
                 <div className="flex items-center justify-between">
                   <p className="text-xs uppercase tracking-[0.4em] text-white/60">
                     {project.period}
@@ -62,7 +59,7 @@ export default function ProjectsShowcase({
                     <GlassBadge key={item} label={item} />
                   ))}
                 </div>
-                <div className="mt-auto flex items-center justify-between">
+                <div className="mt-auto flex items-center justify-between pt-4">
                   <span className="inline-flex items-center gap-1 text-xs uppercase tracking-[0.4em] text-[color:var(--accent-current)]">
                     {ui.projects.expand}
                     <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
@@ -72,7 +69,7 @@ export default function ProjectsShowcase({
                   </MagneticButton>
                 </div>
               </div>
-            </ThreeDCard>
+            </CyberCard>
           ))}
         </div>
       </div>

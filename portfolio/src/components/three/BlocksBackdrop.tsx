@@ -7,6 +7,7 @@ import { usePerformanceMode } from "@/lib/performance";
 
 function WaveGrid() {
   const meshRef = useRef<THREE.Mesh>(null);
+  const tempColor = useMemo(() => new THREE.Color(), []);
 
   useFrame(({ clock, pointer }) => {
     if (!meshRef.current) return;
@@ -41,6 +42,14 @@ function WaveGrid() {
     // Smooth rotational response to mouse cursor
     meshRef.current.rotation.z = pointer.x * 0.06;
     meshRef.current.rotation.x = -Math.PI / 2.8 + pointer.y * 0.04;
+
+    // Lerp material color dynamically based on active CSS variable
+    const rootStyle = typeof document !== "undefined" ? document.documentElement.style : null;
+    const targetColorStr = rootStyle?.getPropertyValue("--accent-current")?.trim() || "#00f0ff";
+    if (targetColorStr && (meshRef.current.material as THREE.MeshStandardMaterial).color) {
+      tempColor.set(targetColorStr);
+      (meshRef.current.material as THREE.MeshStandardMaterial).color.lerp(tempColor, 0.04);
+    }
   });
 
   return (
@@ -48,11 +57,11 @@ function WaveGrid() {
       <planeGeometry args={[28, 28, 55, 55]} />
       <meshStandardMaterial
         wireframe
-        color="#7cf4ff"
+        color="#00f0ff"
         transparent
-        opacity={0.16}
-        roughness={0.1}
-        metalness={0.9}
+        opacity={0.18}
+        roughness={0.15}
+        metalness={0.8}
       />
     </mesh>
   );
@@ -115,10 +124,10 @@ function FloatingParticleField() {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.035}
-        color="#7cffc2"
+        size={0.04}
+        color="#bc13fe"
         transparent
-        opacity={0.4}
+        opacity={0.5}
         sizeAttenuation
         depthWrite={false}
         blending={THREE.AdditiveBlending}
@@ -129,20 +138,28 @@ function FloatingParticleField() {
 
 function InteractiveLights() {
   const lightRef = useRef<THREE.PointLight>(null);
+  const tempColor = useMemo(() => new THREE.Color(), []);
 
   useFrame(({ pointer }) => {
     if (!lightRef.current) return;
     // Primary spotlight follows pointer dynamically
     lightRef.current.position.x = pointer.x * 12;
     lightRef.current.position.y = pointer.y * 8;
+
+    const rootStyle = typeof document !== "undefined" ? document.documentElement.style : null;
+    const targetColorStr = rootStyle?.getPropertyValue("--accent-current")?.trim() || "#00f0ff";
+    if (targetColorStr) {
+      tempColor.set(targetColorStr);
+      lightRef.current.color.lerp(tempColor, 0.04);
+    }
   });
 
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <pointLight ref={lightRef} position={[0, 0, 4]} intensity={2.0} color="#7cf4ff" />
-      <pointLight position={[8, 5, -3]} intensity={1.5} color="#7cffc2" />
-      <pointLight position={[-8, -5, -3]} intensity={1.2} color="#ffb869" />
+      <ambientLight intensity={0.3} />
+      <pointLight ref={lightRef} position={[0, 0, 4]} intensity={2.5} color="#00f0ff" />
+      <pointLight position={[8, 5, -3]} intensity={1.5} color="#ff007f" />
+      <pointLight position={[-8, -5, -3]} intensity={1.2} color="#bc13fe" />
     </>
   );
 }

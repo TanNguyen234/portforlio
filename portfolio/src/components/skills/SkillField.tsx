@@ -80,7 +80,7 @@ export default function SkillField({ labels }: { labels: string[] }) {
           const dist = Math.hypot(dx, dy);
           if (dist < 140) {
             const alpha = 1 - dist / 140;
-            ctx.strokeStyle = `rgba(124, 244, 255, ${alpha * 0.15})`;
+            ctx.strokeStyle = `rgba(57, 255, 20, ${alpha * 0.18})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -92,8 +92,8 @@ export default function SkillField({ labels }: { labels: string[] }) {
 
       nodes.forEach((node) => {
         ctx.beginPath();
-        ctx.fillStyle = "rgba(124, 244, 255, 0.65)";
-        ctx.shadowColor = "rgba(124, 244, 255, 0.4)";
+        ctx.fillStyle = "rgba(0, 240, 255, 0.75)";
+        ctx.shadowColor = "rgba(0, 240, 255, 0.5)";
         ctx.shadowBlur = 12;
         ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
         ctx.fill();
