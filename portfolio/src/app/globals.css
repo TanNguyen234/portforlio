@@ -465,6 +465,47 @@ canvas {
   animation: border-beam-flow 8s linear infinite;
 }
 
+.scroll-glitch {
+  transform: skewX(calc(var(--scroll-velocity) * 1.5deg));
+  text-shadow: calc(var(--scroll-velocity) * 1.5px) 0 var(--accent-4), calc(var(--scroll-velocity) * -1.5px) 0 var(--accent);
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+
+.cyber-terminal-text {
+  font-family: var(--font-mono), monospace;
+  color: #39ff14;
+  text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+}
+
+.cyber-terminal-bar {
+  background-color: #39ff14;
+  box-shadow: 0 0 8px #39ff14;
+}
+
+.hud-border-bracket {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid rgba(0, 240, 255, 0.2);
+  pointer-events: none;
+}
+
+.hud-border-tl { top: 24px; left: 24px; border-right: 0; border-bottom: 0; }
+.hud-border-tr { top: 24px; right: 24px; border-left: 0; border-bottom: 0; }
+.hud-border-bl { bottom: 24px; left: 24px; border-right: 0; border-top: 0; }
+.hud-border-br { bottom: 24px; right: 24px; border-left: 0; border-top: 0; }
+
+@keyframes cyber-beacon {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.cyber-status-led {
+  animation: cyber-beacon 1.5s infinite ease-in-out;
+}
+
+
 
 @keyframes floatPulse {
   0%,

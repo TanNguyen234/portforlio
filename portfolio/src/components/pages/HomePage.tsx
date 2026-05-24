@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import GridDistortion from "@/components/effects/GridDistortion";
 import SpectrumSweep from "@/components/effects/SpectrumSweep";
-import BlocksBackdrop from "@/components/three/BlocksBackdrop";
+import VortexScene from "@/components/three/VortexScene";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import ExperienceTimeline from "@/components/sections/ExperienceTimeline";
@@ -37,7 +37,7 @@ export default function HomePage() {
     <div className="relative bg-black text-white">
       <GridDistortion />
       <SpectrumSweep />
-      <BlocksBackdrop />
+      <VortexScene />
 
       <header className="fixed top-0 z-40 w-full border-b border-white/5 bg-black/40 backdrop-blur">
         <div className="section-inner flex items-center justify-between py-4">
@@ -135,7 +135,7 @@ export default function HomePage() {
 
       <AnimatePresence mode="wait">
         <motion.main
-          className="relative z-10"
+          className="relative z-10 scroll-glitch"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
