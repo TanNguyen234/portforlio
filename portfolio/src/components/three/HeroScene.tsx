@@ -85,12 +85,11 @@ function ParticleField() {
 
   useFrame(({ clock, mouse }) => {
     if (!pointsRef.current) return;
-    const scrollY = typeof window !== "undefined" ? window.scrollY : 0;
-    // Rotate and shift particles based on scroll
-    pointsRef.current.rotation.y = clock.getElapsedTime() * 0.05 + scrollY * 0.0006;
-    pointsRef.current.rotation.x = scrollY * 0.0002;
+    // Rotate and shift particles based on mouse and time only
+    pointsRef.current.rotation.y = clock.getElapsedTime() * 0.05;
+    pointsRef.current.rotation.x = 0;
     pointsRef.current.position.x = mouse.x * 0.3;
-    pointsRef.current.position.y = mouse.y * 0.2 - scrollY * 0.001;
+    pointsRef.current.position.y = mouse.y * 0.2;
   });
 
   return (
@@ -112,11 +111,10 @@ function FloatingOrbs() {
 
   useFrame(({ clock, mouse }) => {
     if (!orb.current) return;
-    const scrollY = typeof window !== "undefined" ? window.scrollY : 0;
-    // Lerp orb position based on mouse and push it away/down on scroll
-    target.set(mouse.x * 0.8 + 1.4, mouse.y * 0.4 + 0.2 - scrollY * 0.002, -scrollY * 0.001);
+    // Lerp orb position based on mouse only
+    target.set(mouse.x * 0.8 + 1.4, mouse.y * 0.4 + 0.2, 0);
     orb.current.position.lerp(target, 0.05);
-    orb.current.rotation.y = clock.getElapsedTime() * 0.2 + scrollY * 0.003;
+    orb.current.rotation.y = clock.getElapsedTime() * 0.2;
   });
 
   return (
@@ -137,11 +135,10 @@ function FloatingOrbs() {
 
 function CameraController() {
   useFrame(({ camera }) => {
-    const scrollY = typeof window !== "undefined" ? window.scrollY : 0;
-    // Smoothly shift camera depth and angle based on scroll
-    camera.position.z = 6 + scrollY * 0.001;
-    camera.position.y = -scrollY * 0.0005;
-    camera.rotation.x = -scrollY * 0.0001;
+    // Keep camera at static depth and angle
+    camera.position.z = 6;
+    camera.position.y = 0;
+    camera.rotation.x = 0;
   });
   return null;
 }

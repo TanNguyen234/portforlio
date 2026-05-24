@@ -74,7 +74,7 @@ export default function Hero({
           </span>
         </motion.p>
 
-        <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-7xl leading-tight text-white">
+        <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-7xl leading-tight text-white scroll-glitch-text">
           <AnimatedText text={data.hero.headline} />
         </h1>
 

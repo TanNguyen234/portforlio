@@ -9,6 +9,11 @@ import ScrollVelocity from "@/components/effects/ScrollVelocity";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import BootScreen from "@/components/effects/BootScreen";
 import HudOverlay from "@/components/effects/HudOverlay";
+import NeuralNet from "@/components/effects/NeuralNet";
+import HackingTerminal from "@/components/effects/HackingTerminal";
+import CircuitBoard from "@/components/effects/CircuitBoard";
+import PhysicsDecals from "@/components/effects/PhysicsDecals";
+import CyberWidgets from "@/components/effects/CyberWidgets";
 import { playHoverSound, playClickSound } from "@/lib/audio";
 
 export default function ClientProviders({
@@ -24,26 +29,7 @@ export default function ClientProviders({
     ).matches;
     if (prefersReduced) {
       setBooting(false);
-      return;
     }
-
-    const lenis = new Lenis({
-      lerp: 0.08,
-      smoothWheel: true,
-      syncTouch: true,
-    });
-
-    let rafId = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    };
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
   }, []);
 
   // Global hover and click audio listener hookups
@@ -89,6 +75,11 @@ export default function ClientProviders({
           <CursorGlow />
           <CursorTrail />
           <HudOverlay />
+          <NeuralNet />
+          <HackingTerminal />
+          <CircuitBoard />
+          <PhysicsDecals />
+          <CyberWidgets />
         </>
       )}
     </LocaleProvider>

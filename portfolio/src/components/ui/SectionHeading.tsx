@@ -17,7 +17,7 @@ export default function SectionHeading({
         </p>
       </Reveal>
       <Reveal>
-        <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-5xl leading-tight text-white">
+        <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-5xl leading-tight text-white scroll-glitch-text">
           {title}
         </h2>
       </Reveal>

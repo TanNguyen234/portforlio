@@ -80,14 +80,13 @@ function FloatingSparks() {
     const geom = pointsRef.current.geometry;
     const posAttr = geom.getAttribute("position") as THREE.BufferAttribute;
     const time = clock.getElapsedTime();
-    const scrollY = typeof window !== "undefined" ? window.scrollY : 0;
 
     pointsRef.current.rotation.z = time * 0.02;
 
     for (let i = 0; i < count; i++) {
       let z = posAttr.getZ(i);
-      // Accelerate particle travel speed according to scroll speed
-      z += 0.08 + (scrollY * 0.00015);
+      // Floating sparks travel speed
+      z += 0.08;
       if (z > 2) {
         z = -28;
       }
@@ -119,10 +118,8 @@ function FloatingSparks() {
 
 function VortexCameraController() {
   useFrame(({ camera, pointer }) => {
-    const scrollY = typeof window !== "undefined" ? window.scrollY : 0;
-    
-    // Zoom camera forwards inside the cylinder on scroll down
-    const targetZ = 1.5 - scrollY * 0.005;
+    // Keep camera at a static depth, free from scroll-linked lag
+    const targetZ = 1.5;
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
 
     // Mouse movement adds viewport shift tilts

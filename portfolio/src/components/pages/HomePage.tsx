@@ -17,6 +17,7 @@ import { localizePortfolio } from "@/lib/portfolioLocale";
 import { FileText } from "lucide-react";
 import { Github, Linkedin } from "@/components/icons/BrandIcons";
 import MatrixText from "@/components/ui/MatrixText";
+import CyberShapes from "@/components/three/CyberShapes";
 
 
 export default function HomePage() {
@@ -38,11 +39,12 @@ export default function HomePage() {
       <GridDistortion />
       <SpectrumSweep />
       <VortexScene />
+      <CyberShapes />
 
       <header className="fixed top-0 z-40 w-full border-b border-white/5 bg-black/40 backdrop-blur">
         <div className="section-inner flex items-center justify-between py-4">
           <div className="flex items-center justify-between w-full md:w-auto gap-3">
-            <div className="text-xs uppercase tracking-[0.4em] text-white/70">
+            <div className="text-xs uppercase tracking-[0.4em] text-white/70 scroll-glitch-text">
               <MatrixText text={localizedData.hero.name} triggerOnHover={true} />
             </div>
             <div className="flex items-center gap-4 md:hidden">
@@ -80,7 +82,7 @@ export default function HomePage() {
               <a
                 key={item.href}
                 href={item.href}
-                className="transition-colors hover:text-white"
+                className="transition-colors hover:text-white scroll-glitch-text"
               >
                 <MatrixText text={item.label} triggerOnHover={true} />
               </a>
@@ -135,7 +137,7 @@ export default function HomePage() {
 
       <AnimatePresence mode="wait">
         <motion.main
-          className="relative z-10 scroll-glitch"
+          className="relative z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
