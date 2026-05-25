@@ -176,7 +176,7 @@ export default function NeuralNet() {
   return (
     <div
       ref={wrapperRef}
-      className="pointer-events-none fixed inset-0 z-[1] w-full h-full opacity-55"
+      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full opacity-55"
       aria-hidden="true"
     >
       <canvas ref={canvasRef} />

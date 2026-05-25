@@ -240,7 +240,7 @@ export default function PhysicsDecals() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[2] w-full h-full"
+      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full"
       style={{ mixBlendMode: "screen" }}
     >
       <canvas ref={canvasRef} />

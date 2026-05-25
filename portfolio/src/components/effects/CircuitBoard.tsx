@@ -292,7 +292,7 @@ export default function CircuitBoard() {
 
   return (
     <div
-      className="pointer-events-auto fixed inset-0 z-[1] w-full h-full opacity-65"
+      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full opacity-65"
       style={{ mixBlendMode: "screen" }}
     >
       <canvas ref={canvasRef} />

@@ -158,6 +158,81 @@ export default function CyberCard({
           {/* Grid lines pattern */}
           <div className="absolute inset-0 bg-[linear-gradient(var(--grid)_1px,transparent_1px),linear-gradient(90deg,var(--grid)_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.03] pointer-events-none" />
 
+          {/* Integrated Circuit Paths Background */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.03] group-hover/card:opacity-[0.14] transition-all duration-500 z-0 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M 20 40 L 80 40 L 100 60 L 100 120"
+              stroke={customAccent}
+              strokeWidth="1"
+              fill="none"
+              strokeDasharray={isHovered ? "none" : "4 4"}
+              className="transition-all duration-500"
+            />
+            <path
+              d="M 40 180 L 100 180 L 120 160 L 180 160"
+              stroke={customAccent}
+              strokeWidth="1"
+              fill="none"
+              strokeDasharray={isHovered ? "none" : "4 4"}
+              className="transition-all duration-500"
+            />
+            {/* Circuit nodes */}
+            <circle cx="20" cy="40" r="3" fill={customAccent} opacity={isHovered ? 0.9 : 0.4} />
+            <circle cx="100" cy="120" r="3" fill={customAccent} opacity={isHovered ? 0.9 : 0.4} />
+            <circle cx="40" cy="180" r="3" fill={customAccent} opacity={isHovered ? 0.9 : 0.4} />
+            <circle cx="180" cy="160" r="3" fill={customAccent} opacity={isHovered ? 0.9 : 0.4} />
+            
+            {/* Animating data pulse sweep */}
+            {isHovered && (
+              <>
+                <motion.circle
+                  r="2.2"
+                  fill="#ffffff"
+                  style={{
+                    offsetPath: `path("M 20 40 L 80 40 L 100 60 L 100 120")`,
+                  }}
+                  animate={{
+                    offsetDistance: ["0%", "100%"]
+                  }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+                <motion.circle
+                  r="2.2"
+                  fill="#ffffff"
+                  style={{
+                    offsetPath: `path("M 40 180 L 100 180 L 120 160 L 180 160")`,
+                  }}
+                  animate={{
+                    offsetDistance: ["0%", "100%"]
+                  }}
+                  transition={{
+                    duration: 1.8,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 0.5,
+                  }}
+                />
+              </>
+            )}
+          </svg>
+
+          {/* Laser Sweep Scan Line */}
+          {isHovered && (
+            <div
+              className="absolute inset-x-0 h-[2.5px] pointer-events-none z-20"
+              style={{
+                background: `linear-gradient(90deg, transparent, ${customAccent}, transparent)`,
+                boxShadow: `0 0 10px ${customAccent}, 0 0 4px ${customAccent}`,
+                animation: "laser-sweep 2.2s linear infinite",
+                top: 0,
+              }}
+            />
+          )}
+
           {/* Content layer that flickers/warms up like neon */}
           <div className={`${isInView ? "neon-flicker" : ""} relative z-10 w-full h-full flex flex-col`}>
             {children}

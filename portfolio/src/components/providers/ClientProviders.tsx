@@ -13,7 +13,6 @@ import NeuralNet from "@/components/effects/NeuralNet";
 import HackingTerminal from "@/components/effects/HackingTerminal";
 import CircuitBoard from "@/components/effects/CircuitBoard";
 import PhysicsDecals from "@/components/effects/PhysicsDecals";
-import CyberWidgets from "@/components/effects/CyberWidgets";
 import { playHoverSound, playClickSound } from "@/lib/audio";
 
 export default function ClientProviders({
@@ -79,7 +78,6 @@ export default function ClientProviders({
           <HackingTerminal />
           <CircuitBoard />
           <PhysicsDecals />
-          <CyberWidgets />
         </>
       )}
     </LocaleProvider>
