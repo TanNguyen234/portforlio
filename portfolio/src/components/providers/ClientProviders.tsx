@@ -15,6 +15,7 @@ import NeuralNet from "@/components/effects/NeuralNet";
 import HackingTerminal from "@/components/effects/HackingTerminal";
 import CircuitBoard from "@/components/effects/CircuitBoard";
 import PhysicsDecals from "@/components/effects/PhysicsDecals";
+import ElasticPageWarp from "@/components/effects/ElasticPageWarp";
 import { playHoverSound, playClickSound } from "@/lib/audio";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -109,6 +110,7 @@ export default function ClientProviders({
           <HackingTerminal />
           <CircuitBoard />
           <PhysicsDecals />
+          <ElasticPageWarp />
         </>
       )}
     </LocaleProvider>

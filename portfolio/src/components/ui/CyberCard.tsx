@@ -2,6 +2,8 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import { usePerformanceMode } from "@/lib/performance";
 
 interface CyberCardProps {
@@ -48,6 +50,54 @@ export default function CyberCard({
     return () => clearInterval(interval);
   }, [isHovered]);
 
+  // GSAP 3D Interactive Tilt & Inner Content Parallax
+  useGSAP(
+    () => {
+      const card = containerRef.current;
+      if (!card || isLowEnd) return;
+
+      // Tween hooks for smooth updates
+      const xTo = gsap.quickTo(card, "rotateY", { duration: 0.4, ease: "power2.out" });
+      const yTo = gsap.quickTo(card, "rotateX", { duration: 0.4, ease: "power2.out" });
+      
+      const innerToX = gsap.quickTo(".cyber-card-inner-content", "x", { duration: 0.45, ease: "power2.out" });
+      const innerToY = gsap.quickTo(".cyber-card-inner-content", "y", { duration: 0.45, ease: "power2.out" });
+
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const px = (x / rect.width - 0.5) * 2; // -1 to 1 range
+        const py = (y / rect.height - 0.5) * 2; // -1 to 1 range
+
+        // Tilt the card
+        xTo(px * 10); // Max 10 degrees yaw rotation
+        yTo(py * -10); // Max 10 degrees pitch rotation
+
+        // Parallax shift the content inside in the opposite direction
+        innerToX(px * -5);
+        innerToY(py * -5);
+      };
+
+      const handleMouseLeave = () => {
+        xTo(0);
+        yTo(0);
+        innerToX(0);
+        innerToY(0);
+      };
+
+      card.addEventListener("mousemove", handleMouseMove);
+      card.addEventListener("mouseleave", handleMouseLeave);
+
+      return () => {
+        card.removeEventListener("mousemove", handleMouseMove);
+        card.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    },
+    { scope: containerRef, dependencies: [isLowEnd, dimensions] }
+  );
+
   const w = dimensions.width;
   const h = dimensions.height;
   const c = 16; // Chamfer corner size
@@ -68,6 +118,8 @@ export default function CyberCard({
       className={`cyber-card-wrapper relative group/card w-full h-full ${onClick ? "cursor-pointer" : ""} ${className}`}
       style={{
         "--accent-current": customAccent,
+        transformStyle: "preserve-3d",
+        perspective: "1000px",
       } as React.CSSProperties}
     >
       {/* Target Reticles (HUD corner brackets) */}
@@ -234,7 +286,7 @@ export default function CyberCard({
           )}
 
           {/* Content layer that flickers/warms up like neon */}
-          <div className={`${isInView ? "neon-flicker" : ""} relative z-10 w-full h-full flex flex-col`}>
+          <div className={`${isInView ? "neon-flicker" : ""} cyber-card-inner-content relative z-10 w-full h-full flex flex-col will-change-transform`}>
             {children}
           </div>
 
