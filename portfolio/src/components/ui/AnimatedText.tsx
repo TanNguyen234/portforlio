@@ -1,6 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function AnimatedText({
   text,
@@ -11,24 +14,50 @@ export default function AnimatedText({
   className?: string;
   delay?: number;
 }) {
+  const containerRef = useRef<HTMLSpanElement | null>(null);
   const words = text.split(" ");
 
+  useGSAP(
+    () => {
+      const elements = containerRef.current?.querySelectorAll(".animated-word");
+      if (!elements || elements.length === 0) return;
+
+      gsap.fromTo(
+        elements,
+        {
+          opacity: 0,
+          y: 18,
+          filter: "blur(12px)",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.8,
+          ease: "power2.out",
+          stagger: 0.06,
+          delay: delay,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 95%",
+            toggleActions: "play none none none",
+            once: true,
+          },
+        }
+      );
+    },
+    { scope: containerRef }
+  );
+
   return (
-    <span className={`inline-flex flex-wrap gap-2 ${className}`}>
+    <span ref={containerRef} className={`inline-flex flex-wrap gap-x-2 gap-y-1 ${className}`}>
       {words.map((word, index) => (
-        <motion.span
+        <span
           key={`${word}-${index}`}
-          initial={{ opacity: 0, y: 18, filter: "blur(12px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{
-            duration: 0.8,
-            ease: "easeOut",
-            delay: delay + index * 0.06,
-          }}
-          className="inline-block"
+          className="animated-word inline-block will-change-[transform,opacity,filter]"
         >
           {word}
-        </motion.span>
+        </span>
       ))}
     </span>
   );

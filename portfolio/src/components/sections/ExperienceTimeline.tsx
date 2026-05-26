@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 import CyberCard from "@/components/ui/CyberCard";
@@ -15,19 +16,39 @@ export default function ExperienceTimeline({
   data: PortfolioData;
   ui: UiText;
 }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const lineScale = useTransform(scrollYProgress, [0, 1], [0.1, 1]);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const lineRef = useRef<HTMLDivElement | null>(null);
+
+  useGSAP(
+    () => {
+      const line = lineRef.current;
+      const section = sectionRef.current;
+      if (!line || !section) return;
+
+      gsap.fromTo(
+        line,
+        { scaleY: 0.1 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom center",
+            scrub: 0.5,
+          },
+        }
+      );
+    },
+    { scope: sectionRef }
+  );
 
   return (
     <section
       id="experience"
       data-accent="#bc13fe"
       className="section-shell"
-      ref={ref}
+      ref={sectionRef}
     >
       <div className="section-inner grid gap-12">
         <SectionHeading
@@ -38,14 +59,14 @@ export default function ExperienceTimeline({
         <div className="relative grid gap-8 lg:grid-cols-[80px_1fr]">
           <div className="relative hidden lg:block">
             <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/10" />
-            <motion.div
-              className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-[color:var(--accent-current)] via-white/40 to-transparent"
-              style={{ scaleY: lineScale, transformOrigin: "top" }}
+            <div
+              ref={lineRef}
+              className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-[color:var(--accent-current)] via-white/40 to-transparent origin-top will-change-transform"
             />
           </div>
           <div className="flex flex-col gap-6">
-            {data.experience.map((item) => (
-              <Reveal key={item.role}>
+            {data.experience.map((item, idx) => (
+              <Reveal key={item.role} delay={idx * 0.1}>
                 <CyberCard accentColor="#bc13fe" className="w-full">
                   <div className="flex flex-col gap-4">
                     <p className="text-xs uppercase tracking-[0.3em] text-white/60">

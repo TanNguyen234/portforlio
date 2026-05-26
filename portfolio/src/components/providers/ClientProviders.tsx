@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Lenis from "lenis";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BackgroundSync from "@/components/effects/BackgroundSync";
 import CursorGlow from "@/components/effects/CursorGlow";
 import CursorTrail from "@/components/effects/CursorTrail";
@@ -14,6 +16,8 @@ import HackingTerminal from "@/components/effects/HackingTerminal";
 import CircuitBoard from "@/components/effects/CircuitBoard";
 import PhysicsDecals from "@/components/effects/PhysicsDecals";
 import { playHoverSound, playClickSound } from "@/lib/audio";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ClientProviders({
   children,
@@ -30,6 +34,33 @@ export default function ClientProviders({
       setBooting(false);
     }
   }, []);
+
+  // Initialize Lenis smooth scroll and link it to GSAP ScrollTrigger
+  useEffect(() => {
+    if (booting) return;
+
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+    });
+
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const updateTicker = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+    
+    gsap.ticker.add(updateTicker);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(updateTicker);
+      lenis.destroy();
+    };
+  }, [booting]);
 
   // Global hover and click audio listener hookups
   useEffect(() => {

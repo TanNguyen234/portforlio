@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import gsap from "gsap";
+import { useRef } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import HeroScene from "@/components/three/HeroScene";
 import AnimatedText from "@/components/ui/AnimatedText";
 import MagneticButton from "@/components/ui/MagneticButton";
@@ -21,29 +21,66 @@ export default function Hero({
   const { isLowEnd } = usePerformanceMode();
   const heroRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const element = heroRef.current;
-    if (!element) return;
+  useGSAP(
+    () => {
+      const element = heroRef.current;
+      if (!element) return;
 
-    const xTo = gsap.quickTo(element, "--parallax-x", {
-      duration: 0.6,
-      ease: "power3",
-    });
-    const yTo = gsap.quickTo(element, "--parallax-y", {
-      duration: 0.6,
-      ease: "power3",
-    });
+      // Mouse move parallax
+      const xTo = gsap.quickTo(element, "--parallax-x", {
+        duration: 0.6,
+        ease: "power3",
+      });
+      const yTo = gsap.quickTo(element, "--parallax-y", {
+        duration: 0.6,
+        ease: "power3",
+      });
 
-    const handleMove = (event: MouseEvent) => {
-      const x = (event.clientX / window.innerWidth - 0.5) * 2;
-      const y = (event.clientY / window.innerHeight - 0.5) * 2;
-      xTo(Number(x.toFixed(3)));
-      yTo(Number(y.toFixed(3)));
-    };
+      const handleMove = (event: MouseEvent) => {
+        const x = (event.clientX / window.innerWidth - 0.5) * 2;
+        const y = (event.clientY / window.innerHeight - 0.5) * 2;
+        xTo(Number(x.toFixed(3)));
+        yTo(Number(y.toFixed(3)));
+      };
 
-    window.addEventListener("mousemove", handleMove);
-    return () => window.removeEventListener("mousemove", handleMove);
-  }, []);
+      window.addEventListener("mousemove", handleMove);
+
+      // Entrance animation timeline
+      const tl = gsap.timeline({ delay: 0.2 });
+      
+      tl.fromTo(
+        ".hero-role",
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
+      );
+      
+      tl.fromTo(
+        ".hero-subhead",
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+        "-=0.4"
+      );
+
+      tl.fromTo(
+        ".hero-btn-wrap",
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.1 },
+        "-=0.5"
+      );
+
+      tl.fromTo(
+        ".hero-highlight",
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.08 },
+        "-=0.4"
+      );
+
+      return () => {
+        window.removeEventListener("mousemove", handleMove);
+      };
+    },
+    { scope: heroRef }
+  );
 
   return (
     <section
@@ -63,61 +100,52 @@ export default function Hero({
       <div className="pointer-events-none absolute -top-32 right-0 h-72 w-72 rounded-full opacity-50 blur-3xl animated-gradient parallax-layer depth-3 velocity-blur" />
 
       <div className="section-inner relative z-10 flex min-h-[92vh] flex-col justify-center gap-12 py-32">
-        <motion.p
-          className="text-xs uppercase tracking-[0.5em] text-white/60"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
+        <p className="hero-role text-xs uppercase tracking-[0.5em] text-white/60 opacity-0">
           <span className="cyber-glitch-text font-bold" data-text={data.hero.role}>
             {data.hero.role}
           </span>
-        </motion.p>
+        </p>
 
         <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-7xl leading-tight text-white scroll-glitch-text">
           <AnimatedText text={data.hero.headline} />
         </h1>
 
-        <motion.p
-          className="max-w-2xl text-base md:text-lg text-[color:var(--muted)]"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
-        >
+        <p className="hero-subhead max-w-2xl text-base md:text-lg text-[color:var(--muted)] opacity-0">
           {data.hero.subhead}
-        </motion.p>
+        </p>
 
         <div className="flex flex-wrap gap-4">
-          <MagneticButton 
-            className="depth-1 parallax-layer flex items-center gap-2 border-[#00f0ff]/30 text-white hover:border-[#00f0ff]/80 hover:shadow-[0_0_15px_rgba(0,240,255,0.25)]" 
-            href="#projects"
-          >
-            <Eye className="h-4 w-4 text-[#00f0ff]" />
-            {ui.hero.ctaPrimary}
-          </MagneticButton>
-          <MagneticButton
-            className="depth-2 parallax-layer border-[#ff007f]/30 bg-transparent flex items-center gap-2 hover:border-[#ff007f]/80 hover:shadow-[0_0_15px_rgba(255,0,127,0.25)]"
-            href="#contact"
-          >
-            <Mail className="h-4 w-4 text-[#ff007f]" />
-            {ui.hero.ctaSecondary}
-          </MagneticButton>
+          <div className="hero-btn-wrap opacity-0">
+            <MagneticButton 
+              className="depth-1 parallax-layer flex items-center gap-2 border-[#00f0ff]/30 text-white hover:border-[#00f0ff]/80 hover:shadow-[0_0_15px_rgba(0,240,255,0.25)]" 
+              href="#projects"
+            >
+              <Eye className="h-4 w-4 text-[#00f0ff]" />
+              {ui.hero.ctaPrimary}
+            </MagneticButton>
+          </div>
+          <div className="hero-btn-wrap opacity-0">
+            <MagneticButton
+              className="depth-2 parallax-layer border-[#ff007f]/30 bg-transparent flex items-center gap-2 hover:border-[#ff007f]/80 hover:shadow-[0_0_15px_rgba(255,0,127,0.25)]"
+              href="#contact"
+            >
+              <Mail className="h-4 w-4 text-[#ff007f]" />
+              {ui.hero.ctaSecondary}
+            </MagneticButton>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.3em] text-white/60">
           {data.hero.highlights.map((item, index) => {
             const Icon = index === 0 ? Terminal : index === 1 ? Cpu : MapPin;
             return (
-              <motion.span
+              <span
                 key={item}
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + index * 0.08, duration: 0.6 }}
+                className="hero-highlight inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 opacity-0"
               >
                 <Icon className="h-3.5 w-3.5 text-[#00f0ff]" />
                 {item}
-              </motion.span>
+              </span>
             );
           })}
         </div>

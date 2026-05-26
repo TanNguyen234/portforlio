@@ -44,3 +44,6 @@ next-env.d.ts
 .npm-cache/
 .pnpm-store/
 
+# gsap skills reference
+/gsap-skills/
+

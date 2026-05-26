@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function BackgroundSync() {
   useEffect(() => {
@@ -9,43 +11,79 @@ export default function BackgroundSync() {
       document.querySelectorAll<HTMLElement>("[data-accent]")
     );
 
-    if (!sections.length) {
-      return;
-    }
+    if (!sections.length) return;
 
-    const updateAccent = (value?: string) => {
-      if (!value) return;
-      root.style.setProperty("--accent-current", value);
-
-      const hex = value.replace("#", "").trim();
+    const parseHex = (hexStr: string) => {
+      const hex = hexStr.replace("#", "").trim();
       if (hex.length === 6) {
         const r = parseInt(hex.slice(0, 2), 16);
         const g = parseInt(hex.slice(2, 4), 16);
         const b = parseInt(hex.slice(4, 6), 16);
-        root.style.setProperty("--accent-glow", `rgba(${r}, ${g}, ${b}, 0.22)`);
+        return { r, g, b };
       }
+      return { r: 0, g: 240, b: 255 }; // fallback cyan
     };
 
-    updateAccent(sections[0].dataset.accent);
+    const initialAccent = sections[0].dataset.accent || "#00f0ff";
+    const initialRGB = parseHex(initialAccent);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const accent = (entry.target as HTMLElement).dataset.accent;
-            updateAccent(accent);
+    const activeColors = {
+      hex: initialAccent,
+      r: initialRGB.r,
+      g: initialRGB.g,
+      b: initialRGB.b,
+    };
+
+    const updateAccent = (colorObj: typeof activeColors) => {
+      root.style.setProperty("--accent-current", colorObj.hex);
+      root.style.setProperty(
+        "--accent-glow",
+        `rgba(${Math.round(colorObj.r)}, ${Math.round(colorObj.g)}, ${Math.round(colorObj.b)}, 0.22)`
+      );
+    };
+
+    // Apply initial colors
+    updateAccent(activeColors);
+
+    const triggers: ScrollTrigger[] = [];
+
+    sections.forEach((section) => {
+      const accent = section.dataset.accent;
+      if (!accent) return;
+
+      const targetColor = parseHex(accent);
+
+      const st = ScrollTrigger.create({
+        trigger: section,
+        start: "top 40%",
+        end: "bottom 40%",
+        onToggle: (self) => {
+          if (self.isActive) {
+            // Tween RGB values smoothly
+            gsap.to(activeColors, {
+              r: targetColor.r,
+              g: targetColor.g,
+              b: targetColor.b,
+              duration: 0.8,
+              ease: "power2.out",
+              onUpdate: () => {
+                const hexR = Math.round(activeColors.r).toString(16).padStart(2, "0");
+                const hexG = Math.round(activeColors.g).toString(16).padStart(2, "0");
+                const hexB = Math.round(activeColors.b).toString(16).padStart(2, "0");
+                activeColors.hex = `#${hexR}${hexG}${hexB}`;
+                updateAccent(activeColors);
+              },
+            });
           }
-        });
-      },
-      {
-        threshold: 0.35,
-        rootMargin: "-20% 0px -45% 0px",
-      }
-    );
+        },
+      });
 
-    sections.forEach((section) => observer.observe(section));
+      triggers.push(st);
+    });
 
-    return () => observer.disconnect();
+    return () => {
+      triggers.forEach((st) => st.kill());
+    };
   }, []);
 
   return null;
