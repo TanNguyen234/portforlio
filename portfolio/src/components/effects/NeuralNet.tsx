@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { usePerformanceMode } from "@/lib/performance";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 type Particle = {
   x: number;
@@ -147,7 +149,22 @@ export default function NeuralNet() {
       }
 
       ctx.globalAlpha = 1.0;
+      if (isAnimating) {
+        rafId = requestAnimationFrame(draw);
+      }
+    };
+
+    let isAnimating = false;
+
+    const startLoop = () => {
+      if (isAnimating) return;
+      isAnimating = true;
       rafId = requestAnimationFrame(draw);
+    };
+
+    const stopLoop = () => {
+      isAnimating = false;
+      cancelAnimationFrame(rafId);
     };
 
     resize();
@@ -161,10 +178,25 @@ export default function NeuralNet() {
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseleave", onMouseLeave);
-    rafId = requestAnimationFrame(draw);
+
+    const st = ScrollTrigger.create({
+      trigger: "#about",
+      start: "top bottom",
+      end: "bottom top",
+      onToggle: (self) => {
+        if (self.isActive) {
+          startLoop();
+          gsap.to(wrapper, { opacity: 0.55, duration: 0.8, ease: "power2.out" });
+        } else {
+          stopLoop();
+          gsap.to(wrapper, { opacity: 0, duration: 0.8, ease: "power2.out" });
+        }
+      },
+    });
 
     return () => {
-      cancelAnimationFrame(rafId);
+      stopLoop();
+      st.kill();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseleave", onMouseLeave);
@@ -176,7 +208,7 @@ export default function NeuralNet() {
   return (
     <div
       ref={wrapperRef}
-      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full opacity-55"
+      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full opacity-0"
       aria-hidden="true"
     >
       <canvas ref={canvasRef} />

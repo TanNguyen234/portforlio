@@ -1,9 +1,10 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import { usePerformanceMode } from "@/lib/performance";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 function TunnelRings() {
   const groupRef = useRef<THREE.Group>(null);
@@ -65,12 +66,17 @@ function FloatingSparks() {
 
   const [positions] = useMemo(() => {
     const posArr = new Float32Array(count * 3);
+    const pseudoRandom = (seed: number) => {
+      const value = Math.sin(seed) * 10000;
+      return value - Math.floor(value);
+    };
     for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const radius = 1.0 + Math.random() * 2.6; // Concentric cylinder layout boundaries
+      const seed = i + 1;
+      const angle = pseudoRandom(seed * 1.23) * Math.PI * 2;
+      const radius = 1.0 + pseudoRandom(seed * 4.56) * 2.6;
       posArr[i * 3] = Math.cos(angle) * radius;
       posArr[i * 3 + 1] = Math.sin(angle) * radius;
-      posArr[i * 3 + 2] = -Math.random() * 28;
+      posArr[i * 3 + 2] = -pseudoRandom(seed * 7.89) * 28;
     }
     return [posArr];
   }, []);
@@ -135,8 +141,26 @@ function VortexCameraController() {
 
 export default function VortexScene() {
   const { isLowEnd } = usePerformanceMode();
+  const [isActive, setIsActive] = useState(true);
 
-  if (isLowEnd) {
+  useEffect(() => {
+    if (isLowEnd) return;
+
+    const st = ScrollTrigger.create({
+      trigger: "#hero",
+      start: "top bottom",
+      end: "bottom top",
+      onToggle: (self) => {
+        setIsActive(self.isActive);
+      },
+    });
+
+    return () => {
+      st.kill();
+    };
+  }, [isLowEnd]);
+
+  if (isLowEnd || !isActive) {
     return null;
   }
 

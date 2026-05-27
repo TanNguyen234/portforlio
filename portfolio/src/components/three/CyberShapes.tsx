@@ -13,7 +13,7 @@ function DraggableMesh({ geomType }: { geomType: "icosahedron" | "octahedron" })
   const translationVelocity = useRef({ x: 0.004, y: -0.003 });
   const tempColor = useMemo(() => new THREE.Color(), []);
 
-  useFrame(({ clock, pointer }) => {
+  useFrame(({ pointer }) => {
     if (!meshRef.current) return;
 
     if (!isDragging.current) {

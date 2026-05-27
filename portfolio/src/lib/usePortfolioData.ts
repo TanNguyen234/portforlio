@@ -22,10 +22,10 @@ export const usePortfolioData = () => {
           setData(json);
           setLoading(false);
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error("Error loading portfolio from DB:", err);
         if (active) {
-          setError(err.message);
+          setError(err instanceof Error ? err.message : "Unknown error");
           setLoading(false);
         }
       }
@@ -53,9 +53,9 @@ export const usePortfolioData = () => {
         throw new Error(errJson.error || "Failed to save portfolio data");
       }
       return { success: true };
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error updating portfolio in DB:", err);
-      return { success: false, error: err.message };
+      return { success: false, error: err instanceof Error ? err.message : "Unknown error" };
     }
   };
 

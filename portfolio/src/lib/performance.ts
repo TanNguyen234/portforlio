@@ -15,8 +15,10 @@ export function usePerformanceMode() {
     const cores = navigator.hardwareConcurrency ?? 8;
     const lowEnd = prefersReduced || memory <= 2 || cores <= 2;
 
-    setReduceMotion(prefersReduced);
-    setIsLowEnd(lowEnd);
+    setTimeout(() => {
+      setReduceMotion(prefersReduced);
+      setIsLowEnd(lowEnd);
+    }, 0);
   }, []);
 
   return { isLowEnd, reduceMotion };

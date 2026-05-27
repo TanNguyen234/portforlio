@@ -6,7 +6,9 @@ let muted = false;
 const initAudio = () => {
   if (typeof window === "undefined") return null;
   if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as Window & typeof globalThis & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (AudioContextClass) {
       audioCtx = new AudioContextClass();
     }
@@ -52,7 +54,7 @@ export const playClickSound = () => {
 
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 0.08);
-  } catch (e) {
+  } catch {
     // Ignore errors
   }
 };
@@ -81,7 +83,7 @@ export const playHoverSound = () => {
 
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 0.02);
-  } catch (e) {
+  } catch {
     // Ignore errors
   }
 };
@@ -110,7 +112,7 @@ export const playKeyboardSound = () => {
 
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 0.03);
-  } catch (e) {
+  } catch {
     // Ignore errors
   }
 };
@@ -148,7 +150,7 @@ export const playBootEndSound = () => {
     osc2.start(ctx.currentTime);
     osc1.stop(ctx.currentTime + 0.5);
     osc2.stop(ctx.currentTime + 0.5);
-  } catch (e) {
+  } catch {
     // Ignore errors
   }
 };

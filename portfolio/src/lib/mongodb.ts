@@ -9,7 +9,7 @@ if (!uri) {
   throw new Error("Please add MONGO_URL to your .env file");
 }
 
-let globalWithMongo = global as typeof globalThis & {
+const globalWithMongo = global as typeof globalThis & {
   _mongoClientPromise?: Promise<MongoClient>;
 };
 
@@ -84,7 +84,7 @@ export async function ensureDbInit() {
             cvBuffer = fs.readFileSync(cvPath);
             break;
           }
-        } catch (e) {
+        } catch {
           // ignore path reading error
         }
       }

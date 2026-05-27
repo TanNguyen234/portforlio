@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { usePerformanceMode } from "@/lib/performance";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 type Decal = {
   x: number;
@@ -17,6 +19,7 @@ type Decal = {
 
 export default function PhysicsDecals() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { isLowEnd, reduceMotion } = usePerformanceMode();
 
   useEffect(() => {
@@ -219,17 +222,47 @@ export default function PhysicsDecals() {
         ctx.restore();
       });
 
+      if (isAnimating) {
+        rafId = requestAnimationFrame(draw);
+      }
+    };
+
+    let isAnimating = false;
+
+    const startLoop = () => {
+      if (isAnimating) return;
+      isAnimating = true;
       rafId = requestAnimationFrame(draw);
+    };
+
+    const stopLoop = () => {
+      isAnimating = false;
+      cancelAnimationFrame(rafId);
     };
 
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseleave", onMouseLeave);
-    rafId = requestAnimationFrame(draw);
+
+    const st = ScrollTrigger.create({
+      trigger: "#projects",
+      start: "top bottom",
+      end: "bottom top",
+      onToggle: (self) => {
+        if (self.isActive) {
+          startLoop();
+          gsap.to(wrapperRef.current, { opacity: 1, duration: 0.8, ease: "power2.out" });
+        } else {
+          stopLoop();
+          gsap.to(wrapperRef.current, { opacity: 0, duration: 0.8, ease: "power2.out" });
+        }
+      },
+    });
 
     return () => {
-      cancelAnimationFrame(rafId);
+      stopLoop();
+      st.kill();
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseleave", onMouseLeave);
@@ -240,7 +273,8 @@ export default function PhysicsDecals() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full"
+      ref={wrapperRef}
+      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full opacity-0"
       style={{ mixBlendMode: "screen" }}
     >
       <canvas ref={canvasRef} />

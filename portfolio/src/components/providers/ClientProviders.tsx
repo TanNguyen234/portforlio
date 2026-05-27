@@ -17,6 +17,7 @@ import CircuitBoard from "@/components/effects/CircuitBoard";
 import PhysicsDecals from "@/components/effects/PhysicsDecals";
 import ElasticPageWarp from "@/components/effects/ElasticPageWarp";
 import { playHoverSound, playClickSound } from "@/lib/audio";
+import ParticleWaveGrid from "@/components/three/ParticleWaveGrid";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -106,6 +107,7 @@ export default function ClientProviders({
           <CursorGlow />
           <CursorTrail />
           <HudOverlay />
+          <ParticleWaveGrid />
           <NeuralNet />
           <HackingTerminal />
           <CircuitBoard />

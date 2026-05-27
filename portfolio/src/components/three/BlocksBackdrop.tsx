@@ -74,10 +74,15 @@ function FloatingParticleField() {
   const [positions, initialPositions] = useMemo(() => {
     const posArr = new Float32Array(count * 3);
     const initPosArr = new Float32Array(count * 3);
+    const pseudoRandom = (seed: number) => {
+      const value = Math.sin(seed) * 10000;
+      return value - Math.floor(value);
+    };
     for (let i = 0; i < count; i++) {
-      const x = (Math.random() - 0.5) * 24;
-      const y = (Math.random() - 0.5) * 16;
-      const z = (Math.random() - 0.5) * 12 - 2;
+      const seed = i + 1;
+      const x = (pseudoRandom(seed * 1.23) - 0.5) * 24;
+      const y = (pseudoRandom(seed * 4.56) - 0.5) * 16;
+      const z = (pseudoRandom(seed * 7.89) - 0.5) * 12 - 2;
 
       posArr[i * 3] = x;
       posArr[i * 3 + 1] = y;

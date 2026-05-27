@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePerformanceMode } from "@/lib/performance";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 type Node = {
   id: number;
@@ -30,6 +32,7 @@ type Packet = {
 
 export default function CircuitBoard() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { isLowEnd, reduceMotion } = usePerformanceMode();
   const [nodes, setNodes] = useState<Node[]>([]);
   const [traces, setTraces] = useState<Trace[]>([]);
@@ -146,14 +149,7 @@ export default function CircuitBoard() {
       });
     };
 
-    // Periodically trigger background automated data flow pulses
-    const autoInterval = setInterval(() => {
-      if (nodes.length > 0 && Math.random() < 0.6) {
-        const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
-        triggerPulse(randomNode.id);
-      }
-    }, 2800);
-
+    // Interactive click handler remains, but background pulse interval is moved inside loop controls
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
 
@@ -272,17 +268,58 @@ export default function CircuitBoard() {
       }
 
       ctx.globalAlpha = 1.0;
+      if (isAnimating) {
+        rafId = requestAnimationFrame(draw);
+      }
+    };
+
+    let isAnimating = false;
+    let autoInterval: NodeJS.Timeout | null = null;
+
+    const startLoop = () => {
+      if (isAnimating) return;
+      isAnimating = true;
       rafId = requestAnimationFrame(draw);
+
+      autoInterval = setInterval(() => {
+        if (nodes.length > 0 && Math.random() < 0.6) {
+          const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+          triggerPulse(randomNode.id);
+        }
+      }, 2800);
+    };
+
+    const stopLoop = () => {
+      isAnimating = false;
+      cancelAnimationFrame(rafId);
+      if (autoInterval) {
+        clearInterval(autoInterval);
+        autoInterval = null;
+      }
     };
 
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("click", handleCanvasClick);
-    rafId = requestAnimationFrame(draw);
+
+    const st = ScrollTrigger.create({
+      trigger: "#experience",
+      start: "top bottom",
+      end: "bottom top",
+      onToggle: (self) => {
+        if (self.isActive) {
+          startLoop();
+          gsap.to(wrapperRef.current, { opacity: 0.65, duration: 0.8, ease: "power2.out" });
+        } else {
+          stopLoop();
+          gsap.to(wrapperRef.current, { opacity: 0, duration: 0.8, ease: "power2.out" });
+        }
+      },
+    });
 
     return () => {
-      cancelAnimationFrame(rafId);
-      clearInterval(autoInterval);
+      stopLoop();
+      st.kill();
       window.removeEventListener("resize", resize);
       window.removeEventListener("click", handleCanvasClick);
     };
@@ -292,7 +329,8 @@ export default function CircuitBoard() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full opacity-65"
+      ref={wrapperRef}
+      className="pointer-events-none fixed inset-0 z-[-10] w-full h-full opacity-0"
       style={{ mixBlendMode: "screen" }}
     >
       <canvas ref={canvasRef} />
