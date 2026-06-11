@@ -23,12 +23,12 @@ export const usePortfolioData = () => {
           setLoading(false);
         }
       } catch (err) {
-        console.error("Error loading portfolio from DB:", err);
+        console.warn("Using local fallback portfolio data. Details:", err);
         if (active) {
-          setError(err instanceof Error ? err.message : "Unknown error");
           setLoading(false);
         }
       }
+
     };
 
     fetchData();

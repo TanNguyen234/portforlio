@@ -20,7 +20,6 @@ import { Github, Linkedin } from "@/components/icons/BrandIcons";
 import MatrixText from "@/components/ui/MatrixText";
 import CyberShapes from "@/components/three/CyberShapes";
 import BootScreen from "@/components/effects/BootScreen";
-import HudOverlay from "@/components/effects/HudOverlay";
 
 export default function HomePage() {
   const { data } = usePortfolioData();
@@ -51,9 +50,9 @@ export default function HomePage() {
           <SpectrumSweep />
           <VortexScene />
           <CyberShapes />
-          <HudOverlay />
 
           <header className="fixed top-0 z-40 w-full border-b border-white/5 bg-black/40 backdrop-blur">
+
             <div className="section-inner flex items-center justify-between py-4">
               <div className="flex items-center justify-between w-full md:w-auto gap-3">
                 <div className="text-xs uppercase tracking-[0.4em] text-white/70 scroll-glitch-text">

@@ -42,6 +42,10 @@ export const localizePortfolio = (
   if (data.about.education.majorVi) {
     localized.about.education.major = data.about.education.majorVi;
   }
+  if (data.about.education.descVi) {
+    localized.about.education.desc = data.about.education.descVi;
+  }
+
 
   localized.experience = data.experience.map((item) => ({
     ...item,

@@ -51,10 +51,11 @@ export default function About({
                   <Calendar className="h-4 w-4 text-white/30" />
                   {data.about.education.period}
                 </p>
-                <p className="text-sm text-white/50 flex items-center gap-2">
-                  <Award className="h-4 w-4 text-white/30" />
-                  GPA {data.about.education.gpa}
+                <p className="text-sm text-white/55 flex items-start gap-2 leading-relaxed">
+                  <Award className="h-4 w-4 text-white/30 mt-0.5 shrink-0" />
+                  <span>{data.about.education.desc}</span>
                 </p>
+
               </div>
             </div>
           </CyberCard>

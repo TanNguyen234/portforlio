@@ -10,7 +10,7 @@ import CursorTrail from "@/components/effects/CursorTrail";
 import ScrollVelocity from "@/components/effects/ScrollVelocity";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import BootScreen from "@/components/effects/BootScreen";
-import HudOverlay from "@/components/effects/HudOverlay";
+
 import NeuralNet from "@/components/effects/NeuralNet";
 import HackingTerminal from "@/components/effects/HackingTerminal";
 import CircuitBoard from "@/components/effects/CircuitBoard";
@@ -106,7 +106,7 @@ export default function ClientProviders({
           <ScrollVelocity />
           <CursorGlow />
           <CursorTrail />
-          <HudOverlay />
+
           <ParticleWaveGrid />
           <NeuralNet />
           <HackingTerminal />

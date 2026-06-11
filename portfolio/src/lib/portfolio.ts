@@ -44,7 +44,9 @@ export const portfolio = {
       periodVi: "10/2023 - Hiện tại",
       major: "Information Technology",
       majorVi: "Công nghệ thông tin",
-      gpa: "3.1 / 4.0",
+      desc: "Actively studying core software engineering, data structures, algorithms, and researching applied AI integration.",
+      descVi: "Đang học tập các môn cốt lõi về kỹ thuật phần mềm, cấu trúc dữ liệu, giải thuật và nghiên cứu ứng dụng trí tuệ nhân tạo.",
+
     },
   },
   experience: [

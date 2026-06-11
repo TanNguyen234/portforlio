@@ -35,8 +35,10 @@ export async function GET() {
     return NextResponse.json(cleanData);
   } catch (error) {
     console.error("GET portfolio error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    // Fallback to static local portfolio data to prevent page crashes
+    return NextResponse.json(portfolio);
   }
+
 }
 
 export async function POST(request: Request) {
