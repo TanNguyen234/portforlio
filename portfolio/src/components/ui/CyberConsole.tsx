@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Terminal as TermIcon, Cpu, Activity, Play, RefreshCw, Layers } from "lucide-react";
+import { Cpu, Activity, Layers, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { playClickSound, playKeyboardSound } from "@/lib/audio";
+import { playClickSound } from "@/lib/audio";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -12,18 +12,8 @@ interface CyberConsoleProps {
   ui: UiText;
 }
 
-const MATRIX_GLYPHS = "01$#@%&*+=?///{}[];:<>~_⚡";
-
 export default function CyberConsole({ data, ui }: CyberConsoleProps) {
-  const [activeTab, setActiveTab] = useState<"terminal" | "mlops" | "langgraph">("terminal");
-  const [inputVal, setInputVal] = useState("");
-  const [logs, setLogs] = useState<string[]>([
-    "SYS_CORE CONSOLE COMPILER v1.2.0 ACTIVE",
-    "ESTABLISHING CONTEXT ENVELOPE...",
-    "TYPE 'help' FOR LIST OF SHELL PROTOCOLS."
-  ]);
-  const [matrixActive, setMatrixActive] = useState(false);
-  const [matrixText, setMatrixText] = useState("");
+  const [activeTab, setActiveTab] = useState<"mlops" | "langgraph">("mlops");
   
   // MLOps state
   const [cpuLoad, setCpuLoad] = useState(38);
@@ -35,101 +25,8 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
   // LangGraph nodes state
   const [activeNode, setActiveNode] = useState<string | null>(null);
   
-  const terminalEndRef = useRef<HTMLDivElement>(null);
-  const matrixIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const mlopsIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const langgraphIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Command handlers
-  const handleCommand = (commandStr: string) => {
-    const trimmed = commandStr.trim().toLowerCase();
-    if (!trimmed) return;
-
-    playClickSound();
-    let response: string[] = [];
-
-    switch (trimmed) {
-      case "help":
-        response = [
-          "AVAILABLE TELEMETRY SHELL DIRECTIVES:",
-          "  help       - DISPLAY SYSTEM COMMAND DIRECTORIES",
-          "  skills     - QUERY ACTIVE COGNITIVE VECTOR CAPABILITIES",
-          "  experience - CHECK PROFESSIONAL PRODUCTION DEPLOYMENTS",
-          "  projects   - SCAN DETAILED ACTIVE RESEARCH PROJECT SPECIFICATIONS",
-          "  hack       - TRIGGER SECURITY SCAN AND MATRIX CODE DECRYPTION",
-          "  clear      - PURGE CONSOLE BUFFER SCREEN"
-        ];
-        break;
-      case "skills":
-        response = [
-          "RETRIEVING SKILLSETS CONSTELLATION MAP...",
-          ...data.skills.constellation.map(s => `  > ${s} : [NOMINAL]`)
-        ];
-        break;
-      case "experience":
-        response = [
-          "LOADING CAREER CHRONOLOGY DATA...",
-          ...data.experience.flatMap(exp => [
-            `* [${exp.period}] - ${exp.role}`,
-            `  Description: ${exp.summary}`,
-            ...exp.bullets.map(b => `  - ${b}`)
-          ])
-        ];
-        break;
-      case "projects":
-        response = [
-          "SCANNING PROJECTS DIRECTORIES...",
-          ...data.projects.flatMap(p => [
-            `* ${p.title} (${p.period})`,
-            `  Tech: ${p.stack.join(", ")}`,
-            `  Highlight: ${p.highlights[0] || ""}`
-          ])
-        ];
-        break;
-      case "hack":
-        setMatrixActive(true);
-        response = [
-          "INITIATING ENCRYPTED SHELL DECRYPTION...",
-          "WARNING: SECURITY INTRUSION PROTOCOL TRIGGERED."
-        ];
-        startMatrixRain();
-        break;
-      case "clear":
-        setLogs([]);
-        setMatrixActive(false);
-        setInputVal("");
-        return;
-      default:
-        response = [
-          `SHELL_ERR: COMMAND NOT RESOLVED '${trimmed}'`,
-          "TYPE 'help' FOR CONFIGURATION DIRECTORY."
-        ];
-    }
-
-    setLogs(prev => [...prev, `guest@tannguyen:~$ ${commandStr}`, ...response]);
-    setInputVal("");
-  };
-
-  const startMatrixRain = () => {
-    if (matrixIntervalRef.current) clearInterval(matrixIntervalRef.current);
-    let count = 0;
-    matrixIntervalRef.current = setInterval(() => {
-      count++;
-      const lines = Array.from({ length: 3 }, () => {
-        return Array.from({ length: 24 }, () => 
-          MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)]
-        ).join("");
-      }).join("\n");
-      setMatrixText(lines);
-      playKeyboardSound();
-
-      if (count > 20) {
-        if (matrixIntervalRef.current) clearInterval(matrixIntervalRef.current);
-        setMatrixActive(false);
-        setLogs(prev => [...prev, "DECRYPTION MATRIX BYPASSED. ROOT CREDENTIAL COMPROMISED."]);
-      }
-    }, 150);
-  };
 
   // MLOps Real-time Simulation
   useEffect(() => {
@@ -176,12 +73,6 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
     };
   }, []);
 
-  useEffect(() => {
-    if (terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [logs, matrixActive]);
-
   return (
     <div className="w-full max-w-lg bg-[#07040f]/90 border border-[#00f0ff]/20 rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.08)] font-mono text-xs select-none scanlines">
       {/* Header Bar */}
@@ -199,18 +90,6 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
 
       {/* Tabs Menu */}
       <div className="flex border-b border-white/10 bg-black/40">
-        <button
-          onClick={() => { setActiveTab("terminal"); playClickSound(); }}
-          className={`flex-1 py-2.5 flex items-center justify-center gap-1.5 transition-all border-r border-white/5 ${
-            activeTab === "terminal"
-              ? "bg-[#00f0ff]/10 text-[#00f0ff] border-b-2 border-b-[#00f0ff]"
-              : "text-white/40 hover:text-white/80 hover:bg-white/5"
-          }`}
-          type="button"
-        >
-          <TermIcon className="h-3.5 w-3.5" />
-          <span>TERMINAL</span>
-        </button>
         <button
           onClick={() => { setActiveTab("mlops"); playClickSound(); }}
           className={`flex-1 py-2.5 flex items-center justify-center gap-1.5 transition-all border-r border-white/5 ${
@@ -238,59 +117,8 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
       </div>
 
       {/* Console Tab Content */}
-      <div className="h-[260px] p-4 overflow-y-auto bg-black/85 relative flex flex-col justify-between">
+      <div className="h-[230px] p-4 overflow-y-auto bg-black/85 relative flex flex-col justify-between">
         <AnimatePresence mode="wait">
-          {activeTab === "terminal" && (
-            <motion.div
-              key="terminal"
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              className="flex-1 flex flex-col justify-between"
-            >
-              {/* Output log area */}
-              <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-1.5 text-white/80 leading-5 scrollbar-thin">
-                {logs.map((log, idx) => (
-                  <div key={idx} className="whitespace-pre-wrap flex gap-1.5 items-start">
-                    <span className="text-white/30">{`>`}</span>
-                    <span className={log.includes("guest@") ? "text-[#00f0ff]" : log.includes("SHELL_ERR") ? "text-[#ff007f]" : log.includes("RETRIEVING") || log.includes("LOADING") ? "text-[#39ff14]/80" : ""}>
-                      {log}
-                    </span>
-                  </div>
-                ))}
-                
-                {matrixActive && (
-                  <div className="text-[#39ff14] py-1 border-y border-[#39ff14]/20 animate-pulse whitespace-pre tracking-wider leading-3 opacity-90">
-                    {matrixText}
-                  </div>
-                )}
-                <div ref={terminalEndRef} />
-              </div>
-
-              {/* Form Input prompt */}
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleCommand(inputVal);
-                }}
-                className="mt-3 flex items-center gap-1.5 border-t border-white/10 pt-2"
-              >
-                <span className="text-[#00f0ff]">guest@tannguyen:~$</span>
-                <input
-                  type="text"
-                  value={inputVal}
-                  onChange={(e) => {
-                    setInputVal(e.target.value);
-                    playKeyboardSound();
-                  }}
-                  className="flex-1 bg-transparent text-[#39ff14] border-none outline-none caret-[#39ff14] selection:bg-[#39ff14]/25"
-                  placeholder="Type a command..."
-                  autoFocus
-                />
-              </form>
-            </motion.div>
-          )}
-
           {activeTab === "mlops" && (
             <motion.div
               key="mlops"
@@ -352,8 +180,8 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
                 <div className="col-span-2 flex flex-col gap-2 h-full justify-between">
                   <div className="border border-white/10 rounded p-2.5 bg-white/5 flex-1 flex flex-col justify-center">
                     <span className="text-[10px] text-white/55 uppercase">FLOW_RATE</span>
-                    <span className="text-xl font-bold text-[#39ff14] my-0.5">{rate} t/s</span>
-                    <span className="text-[9px] text-white/30">FRAUD RATIO: 0.17%</span>
+                    <span className="text-sm font-bold text-[#39ff14] my-0.5">{rate} t/s</span>
+                    <span className="text-[8px] text-white/30">FRAUD: 0.17%</span>
                   </div>
                 </div>
               </div>

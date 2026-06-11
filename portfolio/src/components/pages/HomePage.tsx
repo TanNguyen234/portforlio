@@ -21,7 +21,6 @@ import MatrixText from "@/components/ui/MatrixText";
 import CyberShapes from "@/components/three/CyberShapes";
 import BootScreen from "@/components/effects/BootScreen";
 import HudOverlay from "@/components/effects/HudOverlay";
-import HackingTerminal from "@/components/effects/HackingTerminal";
 
 export default function HomePage() {
   const { data } = usePortfolioData();
@@ -53,7 +52,6 @@ export default function HomePage() {
           <VortexScene />
           <CyberShapes />
           <HudOverlay />
-          <HackingTerminal />
 
           <header className="fixed top-0 z-40 w-full border-b border-white/5 bg-black/40 backdrop-blur">
             <div className="section-inner flex items-center justify-between py-4">
