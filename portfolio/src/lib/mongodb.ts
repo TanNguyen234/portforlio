@@ -4,29 +4,34 @@ import fs from "fs";
 import path from "path";
 import { portfolio } from "./portfolio";
 
-const uri = process.env.MONGO_URL;
+const uri = process.env.MONGO_URL || "";
 if (!uri) {
-  throw new Error("Please add MONGO_URL to your .env file");
+  console.warn("MONGO_URL environment variable is missing. Database functionality will fall back to local data.");
 }
 
 const globalWithMongo = global as typeof globalThis & {
   _mongoClientPromise?: Promise<MongoClient>;
 };
 
-let clientPromise: Promise<MongoClient>;
+let clientPromise: Promise<MongoClient> | null = null;
 
-if (process.env.NODE_ENV === "development") {
-  if (!globalWithMongo._mongoClientPromise) {
+if (uri) {
+  if (process.env.NODE_ENV === "development") {
+    if (!globalWithMongo._mongoClientPromise) {
+      const client = new MongoClient(uri);
+      globalWithMongo._mongoClientPromise = client.connect();
+    }
+    clientPromise = globalWithMongo._mongoClientPromise;
+  } else {
     const client = new MongoClient(uri);
-    globalWithMongo._mongoClientPromise = client.connect();
+    clientPromise = client.connect();
   }
-  clientPromise = globalWithMongo._mongoClientPromise;
-} else {
-  const client = new MongoClient(uri);
-  clientPromise = client.connect();
 }
 
 export async function getDb() {
+  if (!clientPromise) {
+    throw new Error("MongoDB client is not initialized because MONGO_URL is missing.");
+  }
   const client = await clientPromise;
   return client.db();
 }
