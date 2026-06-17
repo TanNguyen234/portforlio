@@ -15,15 +15,20 @@ const globalWithMongo = global as typeof globalThis & {
 
 let clientPromise: Promise<MongoClient> | null = null;
 
+const mongoOptions = {
+  connectTimeoutMS: 4000,          // Time out connection attempt after 4 seconds
+  serverSelectionTimeoutMS: 4000,  // Time out server selection (e.g. DNS/IP block) after 4 seconds
+};
+
 if (uri) {
   if (process.env.NODE_ENV === "development") {
     if (!globalWithMongo._mongoClientPromise) {
-      const client = new MongoClient(uri);
+      const client = new MongoClient(uri, mongoOptions);
       globalWithMongo._mongoClientPromise = client.connect();
     }
     clientPromise = globalWithMongo._mongoClientPromise;
   } else {
-    const client = new MongoClient(uri);
+    const client = new MongoClient(uri, mongoOptions);
     clientPromise = client.connect();
   }
 }
