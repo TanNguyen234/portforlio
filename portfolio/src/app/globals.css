@@ -70,7 +70,7 @@ canvas {
 @layer utilities {
   .section-shell {
     position: relative;
-    padding: 120px 0; /* Clear breathability (VISUAL_DENSITY: 4) */
+    padding: 90px 0 120px 0; /* Reduced top padding for tighter visual spacing */
   }
 
   .section-inner {
@@ -130,7 +130,8 @@ canvas {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.55; /* Visible plexus video blending */
+    opacity: 0.72; /* Increased opacity for more presence */
+    filter: contrast(1.25) brightness(0.85) saturate(1.15); /* Boost contrast and prevent dull look */
     will-change: transform;
     transform-style: preserve-3d;
   }

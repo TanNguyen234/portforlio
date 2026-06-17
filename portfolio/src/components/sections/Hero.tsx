@@ -89,7 +89,7 @@ export default function Hero({
       {/* Background gradients overlay for contrast */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-[#020203]/70 to-[#020203] pointer-events-none" />
 
-      <div className="section-inner relative z-10 py-32 md:py-48 flex flex-col justify-center gap-10">
+      <div className="section-inner relative z-10 pt-24 pb-32 md:pt-36 md:pb-48 flex flex-col justify-center gap-10">
         
         {/* Minimal Role Eyebrow */}
         <div className="hero-role opacity-0">

@@ -31,37 +31,38 @@ export default function HomePage() {
     const video = videoRef.current;
     if (!video) return;
 
-    // Ensure video doesn't play on its own
-    video.pause();
-    video.currentTime = 0;
+    // Set base playback rate (slow motion by default)
+    video.playbackRate = 0.32;
 
-    let videoScrubTween: gsap.core.Tween | null = null;
+    // Play video natively to avoid laggy playhead scrubbing
+    video.play().catch((err) => {
+      console.warn("Video play failed or interrupted:", err);
+    });
 
-    const initScrollVideo = () => {
-      const duration = video.duration;
-      if (isNaN(duration) || duration === 0) return;
+    // Scroll-velocity-driven playback speed (slow by default, speeds up on scroll)
+    const velocityTrigger = ScrollTrigger.create({
+      trigger: "body",
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (self) => {
+        const velocity = Math.abs(self.getVelocity()); // Get scroll speed (pixels per second)
+        
+        // Map scroll velocity to video playbackRate.
+        // Base rate is 0.32. Maximum speed capped at 3.2.
+        const targetRate = 0.32 + (velocity / 1200) * 1.8;
+        const clampedRate = Math.min(3.2, Math.max(0.32, targetRate));
 
-      // Animate video's playhead (currentTime) relative to scroll progress
-      videoScrubTween = gsap.to(video, {
-        currentTime: duration,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "body",
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.0, // Smooth transition between scroll updates
-        },
-      });
-    };
-
-    if (video.readyState >= 1) {
-      initScrollVideo();
-    } else {
-      video.addEventListener("loadedmetadata", initScrollVideo);
-    }
+        // Smoothly animate the playbackRate to avoid abrupt speed jumps
+        gsap.to(video, {
+          playbackRate: clampedRate,
+          duration: 0.5,
+          overwrite: "auto",
+        });
+      },
+    });
 
     // Scroll-driven 3D parallax transform (scale and tilt)
-    gsap.fromTo(
+    const transformTrigger = gsap.fromTo(
       video,
       {
         scale: 1,
@@ -113,10 +114,10 @@ export default function HomePage() {
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      video.removeEventListener("loadedmetadata", initScrollVideo);
       window.removeEventListener("mousemove", handleMouseMove);
-      if (videoScrubTween && videoScrubTween.scrollTrigger) {
-        videoScrubTween.scrollTrigger.kill();
+      velocityTrigger.kill();
+      if (transformTrigger.scrollTrigger) {
+        transformTrigger.scrollTrigger.kill();
       }
     };
   }, []);
@@ -136,7 +137,8 @@ export default function HomePage() {
         <video
           ref={videoRef}
           src="/background.mp4"
-          preload="auto"
+          autoPlay
+          loop
           muted
           playsInline
           className="bg-video-container"
