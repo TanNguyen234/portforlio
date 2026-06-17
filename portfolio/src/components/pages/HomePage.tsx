@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import GridDistortion from "@/components/effects/GridDistortion";
-import SpectrumSweep from "@/components/effects/SpectrumSweep";
-import VortexScene from "@/components/three/VortexScene";
+import Lenis from "lenis";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import ExperienceTimeline from "@/components/sections/ExperienceTimeline";
@@ -15,16 +13,15 @@ import { usePortfolioData } from "@/lib/usePortfolioData";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { uiText } from "@/lib/i18n";
 import { localizePortfolio } from "@/lib/portfolioLocale";
-import { FileText } from "lucide-react";
+import { FileText, Menu, X, ArrowUpRight } from "lucide-react";
 import { Github, Linkedin } from "@/components/icons/BrandIcons";
-import MatrixText from "@/components/ui/MatrixText";
-import CyberShapes from "@/components/three/CyberShapes";
 import BootScreen from "@/components/effects/BootScreen";
 
 export default function HomePage() {
   const { data } = usePortfolioData();
   const { locale, toggleLocale } = useLocale();
   const [hasBooted, setHasBooted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const t = uiText[locale];
   const localizedData = localizePortfolio(data, locale);
 
@@ -36,6 +33,28 @@ export default function HomePage() {
     { label: t.nav.contact, href: "#contact" },
   ];
 
+  // Initialize Lenis smooth scroll
+  useEffect(() => {
+    if (!hasBooted) return;
+    
+    const lenis = new Lenis({
+      duration: 1.4,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, [hasBooted]);
+
   return (
     <>
       <AnimatePresence mode="wait">
@@ -45,108 +64,184 @@ export default function HomePage() {
       </AnimatePresence>
 
       {hasBooted && (
-        <div className="relative bg-black text-white min-h-screen">
-          <GridDistortion />
-          <SpectrumSweep />
-          <VortexScene />
-          <CyberShapes />
+        <div className="relative min-h-screen bg-[#020203] text-[#f4f4f7] selection:bg-teal-500/20 selection:text-white overflow-hidden">
+          {/* Looping Ambient 3D Video Background & Noise Overlay */}
+          <video
+            src="/background.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="bg-video-container"
+          />
+          <div className="grain-noise-overlay" />
 
-          <header className="fixed top-0 z-40 w-full border-b border-white/5 bg-black/40 backdrop-blur">
+          {/* Fluid Island Floating Header */}
+          <header className="fixed top-6 left-0 right-0 z-40 w-full px-4 md:px-8 pointer-events-none flex justify-center">
+            <motion.div
+              className="pointer-events-auto flex items-center justify-between w-full max-w-5xl px-6 py-3 bg-[#0a0a0c]/60 backdrop-blur-xl border border-white/5 rounded-full shadow-2xl"
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {/* Branding name */}
+              <a
+                href="#hero"
+                className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/80 hover:text-white transition-colors"
+              >
+                {localizedData.hero.name}
+              </a>
 
-            <div className="section-inner flex items-center justify-between py-4">
-              <div className="flex items-center justify-between w-full md:w-auto gap-3">
-                <div className="text-xs uppercase tracking-[0.4em] text-white/70 scroll-glitch-text">
-                  <MatrixText text={localizedData.hero.name} triggerOnHover={true} />
-                </div>
-                <div className="flex items-center gap-4 md:hidden">
-                  <a
-                    href={localizedData.contact.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-white/60 hover:text-white transition-colors"
-                    aria-label="GitHub"
-                  >
-                    <Github className="h-4 w-4" />
-                  </a>
-                  {localizedData.contact.linkedin ? (
-                    <a
-                      href={localizedData.contact.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-white/60 hover:text-white transition-colors"
-                      aria-label="LinkedIn"
-                    >
-                      <Linkedin className="h-4 w-4" />
-                    </a>
-                  ) : null}
-                  <button
-                    type="button"
-                    onClick={toggleLocale}
-                    className="rounded-full border border-white/15 px-2.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-white/70 transition hover:border-white/40"
-                  >
-                    {locale === "en" ? "VI" : "EN"}
-                  </button>
-                </div>
-              </div>
-              <nav className="hidden items-center gap-6 text-xs uppercase tracking-[0.3em] text-white/60 md:flex">
+              {/* Desktop Nav Items */}
+              <nav className="hidden md:flex items-center gap-6 text-[10px] uppercase font-mono tracking-[0.2em] text-white/60">
                 {navItems.map((item) => (
                   <a
                     key={item.href}
                     href={item.href}
-                    className="transition-colors hover:text-white scroll-glitch-text"
+                    className="transition-colors hover:text-white"
                   >
-                    <MatrixText text={item.label} triggerOnHover={true} />
+                    {item.label}
                   </a>
                 ))}
-                <div className="h-4 w-px bg-white/10" />
-                <div className="flex items-center gap-4">
+              </nav>
+
+              {/* Action buttons (Desktop) */}
+              <div className="hidden md:flex items-center gap-4">
+                <a
+                  href={localizedData.contact.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-white/60 hover:text-white transition-colors"
+                  aria-label="GitHub"
+                >
+                  <Github className="h-4 w-4" />
+                </a>
+                {localizedData.contact.linkedin && (
                   <a
-                    href={localizedData.contact.github}
+                    href={localizedData.contact.linkedin}
                     target="_blank"
                     rel="noreferrer"
                     className="text-white/60 hover:text-white transition-colors"
-                    aria-label="GitHub"
+                    aria-label="LinkedIn"
                   >
-                    <Github className="h-4 w-4" />
+                    <Linkedin className="h-4 w-4" />
                   </a>
-                  {localizedData.contact.linkedin ? (
+                )}
+                {localizedData.contact.cv && (
+                  <a
+                    href={localizedData.contact.cv}
+                    download
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 px-3 py-1 text-[9px] uppercase font-mono tracking-[0.2em] text-white/80 bg-white/5 border border-white/10 rounded-full transition hover:bg-white/10 hover:border-white/20"
+                    aria-label="Download CV"
+                  >
+                    <FileText className="h-3 w-3" />
+                    <span>CV</span>
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={toggleLocale}
+                  className="px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.2em] text-white/70 border border-white/10 rounded-full transition hover:border-white/30 hover:bg-white/5"
+                >
+                  {locale === "en" ? "VI" : "EN"}
+                </button>
+              </div>
+
+              {/* Mobile controls */}
+              <div className="flex md:hidden items-center gap-3">
+                <button
+                  type="button"
+                  onClick={toggleLocale}
+                  className="px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.2em] text-white/70 border border-white/10 rounded-full transition hover:border-white/30"
+                >
+                  {locale === "en" ? "VI" : "EN"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-1.5 text-white/80 hover:text-white transition-colors"
+                  aria-label="Toggle Menu"
+                >
+                  {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+                </button>
+              </div>
+            </motion.div>
+          </header>
+
+          {/* Mobile Fullscreen Menu Drawer */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                className="fixed inset-0 z-30 flex flex-col justify-between bg-[#020203]/95 backdrop-blur-2xl p-8 pt-28 md:hidden"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {/* Navigation links */}
+                <nav className="flex flex-col gap-6 text-2xl uppercase tracking-[0.1em] font-sans font-light">
+                  {navItems.map((item, idx) => (
+                    <motion.a
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between border-b border-white/5 pb-3 text-white/80 hover:text-white"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.08, duration: 0.5 }}
+                    >
+                      <span>{item.label}</span>
+                      <ArrowUpRight className="h-5 w-5 text-white/40" />
+                    </motion.a>
+                  ))}
+                </nav>
+
+                {/* Footer and social details inside drawer */}
+                <div className="flex flex-col gap-6 border-t border-white/5 pt-6">
+                  <div className="flex items-center gap-4">
                     <a
-                      href={localizedData.contact.linkedin}
+                      href={localizedData.contact.github}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-white/60 hover:text-white transition-colors"
-                      aria-label="LinkedIn"
+                      className="flex items-center gap-2 text-xs uppercase font-mono tracking-widest text-white/60 hover:text-white"
                     >
-                      <Linkedin className="h-4 w-4" />
+                      <Github className="h-4 w-4" />
+                      <span>Github</span>
                     </a>
-                  ) : null}
-                  {localizedData.contact.cv ? (
+                    {localizedData.contact.linkedin && (
+                      <a
+                        href={localizedData.contact.linkedin}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-2 text-xs uppercase font-mono tracking-widest text-white/60 hover:text-white"
+                      >
+                        <Linkedin className="h-4 w-4" />
+                        <span>Linkedin</span>
+                      </a>
+                    )}
+                  </div>
+                  {localizedData.contact.cv && (
                     <a
                       href={localizedData.contact.cv}
                       download
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70 transition hover:border-white/30 hover:bg-white/10"
-                      aria-label="Download CV"
+                      className="inline-flex justify-center items-center gap-2 py-3 text-xs uppercase font-mono tracking-widest text-white bg-white/5 border border-white/10 rounded-full"
                     >
-                      <FileText className="h-3 w-3" />
-                      <span>CV</span>
+                      <FileText className="h-4 w-4" />
+                      <span>Download CV</span>
                     </a>
-                  ) : null}
+                  )}
                 </div>
-                <button
-                  type="button"
-                  onClick={toggleLocale}
-                  className="rounded-full border border-white/15 px-3 py-2 text-[10px] uppercase tracking-[0.3em] text-white/70 transition hover:border-white/40"
-                >
-                  {locale === "en" ? "VI" : "EN"}
-                </button>
-              </nav>
-            </div>
-          </header>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <AnimatePresence mode="wait">
             <motion.main
+              id="hero"
               className="relative z-10"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -160,7 +255,7 @@ export default function HomePage() {
               <SkillsConstellation data={localizedData} ui={t} />
               <Contact data={localizedData} ui={t} />
 
-              <footer className="section-inner py-12 text-xs uppercase tracking-[0.4em] text-white/40">
+              <footer className="section-inner py-16 text-center text-[10px] uppercase font-mono tracking-[0.4em] text-white/30 border-t border-white/5">
                 {t.footer}
               </footer>
             </motion.main>

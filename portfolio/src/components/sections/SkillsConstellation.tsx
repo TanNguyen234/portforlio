@@ -4,8 +4,7 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import SectionHeading from "@/components/ui/SectionHeading";
-import SkillField from "@/components/skills/SkillField";
-import CyberCard from "@/components/ui/CyberCard";
+import Reveal from "@/components/ui/Reveal";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -24,36 +23,17 @@ export default function SkillsConstellation({
       if (!container) return;
 
       gsap.fromTo(
-        ".skills-constellation-box",
-        { opacity: 0, scale: 0.96, y: 30 },
+        ".bento-item",
+        { opacity: 0, y: 25 },
         {
           opacity: 1,
-          scale: 1,
           y: 0,
           duration: 0.8,
-          ease: "power2.out",
+          ease: "power3.out",
+          stagger: 0.1,
           scrollTrigger: {
-            trigger: ".skills-constellation-box",
-            start: "top 90%",
-            toggleActions: "play none none none",
-            once: true,
-          },
-        }
-      );
-
-      gsap.fromTo(
-        ".skills-category-card",
-        { opacity: 0, x: 30, scale: 0.95 },
-        {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          duration: 0.7,
-          ease: "power2.out",
-          stagger: 0.12,
-          scrollTrigger: {
-            trigger: ".skills-categories-list",
-            start: "top 90%",
+            trigger: container,
+            start: "top 80%",
             toggleActions: "play none none none",
             once: true,
           },
@@ -63,45 +43,61 @@ export default function SkillsConstellation({
     { scope: containerRef }
   );
 
+  // Layout classes for asymmetric bento grid (alternating spans)
+  const getBentoColSpan = (index: number) => {
+    if (index === 0) return "md:col-span-7";
+    if (index === 1) return "md:col-span-5";
+    if (index === 2) return "md:col-span-5";
+    return "md:col-span-7";
+  };
+
   return (
     <section
       ref={containerRef}
       id="skills"
-      data-accent="#39ff14"
       className="section-shell"
     >
-      <div className="section-inner grid gap-12">
+      <div className="section-inner grid gap-16">
         <SectionHeading
-          eyebrow={ui.sections.skills.eyebrow}
           title={ui.sections.skills.title}
           description={ui.sections.skills.description}
         />
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="skills-constellation-box aspect-[4/3] overflow-hidden rounded-3xl border border-white/10 bg-white/5 opacity-0">
-            <SkillField labels={data.skills.constellation} />
-          </div>
-          <div className="skills-categories-list flex flex-col gap-6">
-            {data.skills.categories.map((category) => (
-              <div key={category.title} className="skills-category-card opacity-0">
-                <CyberCard
-                  accentColor="#39ff14"
-                  className="w-full"
-                >
-                  <h3 className="text-lg font-semibold text-white">
-                    {category.title}
-                  </h3>
-                  <ul className="mt-4 grid grid-cols-2 gap-2 text-sm text-white/60">
+        
+        {/* Asymmetric Gapless Bento Grid */}
+        <div className="grid gap-6 md:grid-cols-12 auto-rows-fr">
+          {data.skills.categories.map((category, index) => (
+            <div
+              key={category.title}
+              className={`bento-item opacity-0 ${getBentoColSpan(index)}`}
+            >
+              <div className="double-bezel-outer h-full">
+                <div className="double-bezel-inner h-full flex flex-col justify-between gap-6 relative overflow-hidden group">
+                  
+                  {/* Subtle ambient light inside card */}
+                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-teal-500/[0.02] group-hover:bg-teal-500/[0.04] rounded-full blur-3xl pointer-events-none transition-colors duration-500" />
+                  
+                  <div className="space-y-2">
+                    <p className="text-[9px] font-mono tracking-widest text-white/30 uppercase">
+                      Category 0{index + 1}
+                    </p>
+                    <h3 className="text-base font-medium text-white/90">
+                      {category.title}
+                    </h3>
+                  </div>
+
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/5 text-xs font-light text-white/50">
                     {category.items.map((item) => (
-                      <li key={item} className="flex items-center gap-2">
-                        <span className="h-1 w-1 rounded-full bg-[#39ff14]/75" />
-                        {item}
+                      <li key={item} className="flex items-center gap-3 group/item">
+                        <span className="h-1.5 w-1.5 rounded-full bg-white/10 group-hover/item:bg-white/40 transition-colors shrink-0" />
+                        <span className="group-hover/item:text-white/80 transition-colors">{item}</span>
                       </li>
                     ))}
                   </ul>
-                </CyberCard>
+
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

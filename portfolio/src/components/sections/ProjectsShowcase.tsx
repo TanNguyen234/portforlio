@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlassBadge from "@/components/ui/GlassBadge";
 import MagneticButton from "@/components/ui/MagneticButton";
-import CyberCard from "@/components/ui/CyberCard";
-import { ExternalLink, Eye, ChevronRight } from "lucide-react";
+import { ExternalLink, Eye, ChevronRight, X, ArrowUpRight } from "lucide-react";
 import { Github } from "@/components/icons/BrandIcons";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
@@ -22,8 +22,6 @@ export default function ProjectsShowcase({
   const [active, setActive] = useState<number | null>(null);
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
-  const modalOverlayRef = useRef<HTMLDivElement | null>(null);
-  const modalContentRef = useRef<HTMLDivElement | null>(null);
 
   useGSAP(
     () => {
@@ -55,48 +53,11 @@ export default function ProjectsShowcase({
     { scope: triggerRef }
   );
 
-  useGSAP(() => {
-    if (active !== null) {
-      // Animate modal entry
-      const tl = gsap.timeline();
-      tl.fromTo(
-        modalOverlayRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.35, ease: "power2.out" }
-      );
-      tl.fromTo(
-        modalContentRef.current,
-        { scale: 0.9, opacity: 0, y: 30 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.2)" },
-        "-=0.15"
-      );
-    }
-  }, [active]);
-
-  const handleClose = () => {
-    const tl = gsap.timeline({
-      onComplete: () => setActive(null),
-    });
-    tl.to(modalContentRef.current, {
-      scale: 0.95,
-      opacity: 0,
-      y: 20,
-      duration: 0.25,
-      ease: "power2.in",
-    });
-    tl.to(
-      modalOverlayRef.current,
-      { opacity: 0, duration: 0.25, ease: "power2.in" },
-      "-=0.15"
-    );
-  };
-
   return (
     <div
       ref={triggerRef}
       id="projects"
-      data-accent="#ff007f"
-      className="relative w-full py-28 border-b border-white/5 bg-black/45 overflow-hidden"
+      className="relative w-full py-32 border-y border-white/5 bg-black/15 overflow-hidden"
     >
       <div
         ref={scrollerRef}
@@ -105,7 +66,6 @@ export default function ProjectsShowcase({
         {/* Horizontal Heading Slide */}
         <div className="w-[85vw] md:w-[42vw] shrink-0 flex flex-col justify-center">
           <SectionHeading
-            eyebrow={ui.sections.projects.eyebrow}
             title={ui.sections.projects.title}
             description={ui.sections.projects.description}
           />
@@ -117,115 +77,153 @@ export default function ProjectsShowcase({
             key={project.title}
             className="w-[85vw] md:w-[48vw] lg:w-[38vw] shrink-0 flex items-stretch"
           >
-            <CyberCard
-              accentColor="#ff007f"
+            <div
               onClick={() => setActive(index)}
-              className="h-full w-full"
+              className="h-full w-full bg-[#0a0a0c]/40 backdrop-blur-md border border-white/5 rounded-3xl p-8 hover:border-white/10 hover:bg-[#0a0a0c]/60 transition-all duration-300 shadow-xl flex flex-col justify-between cursor-pointer group"
             >
-              <div className="flex h-full flex-col gap-5">
+              <div className="flex flex-col gap-5">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+                  <p className="text-[10px] font-mono tracking-widest text-white/40 uppercase">
                     {project.period}
                   </p>
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/40">
+                  <span className="text-[9px] font-mono tracking-[0.2em] text-white/30 uppercase">
                     {ui.projects.caseStudy}
                   </span>
                 </div>
-                <h3 className="text-2xl font-semibold text-white">
+                
+                <h3 className="text-xl font-medium text-white/90 leading-snug">
                   {project.title}
                 </h3>
-                <p className="text-sm text-white/70">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.stack.slice(0, 4).map((item) => (
+                
+                <p className="text-sm font-light text-white/60 leading-relaxed line-clamp-4">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {project.stack.slice(0, 3).map((item) => (
                     <GlassBadge key={item} label={item} />
                   ))}
-                </div>
-                <div className="mt-auto flex items-center justify-between pt-4">
-                  <span className="inline-flex items-center gap-1 text-xs uppercase tracking-[0.4em] text-[color:var(--accent-current)]">
-                    {ui.projects.expand}
-                    <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
-                  </span>
-                  <MagneticButton className="border-white/20 bg-transparent text-[10px]">
-                    {ui.projects.view}
-                  </MagneticButton>
+                  {project.stack.length > 3 && (
+                    <span className="text-[9px] font-mono text-white/30 self-center px-1">
+                      +{project.stack.length - 3}
+                    </span>
+                  )}
                 </div>
               </div>
-            </CyberCard>
+
+              <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-[0.2em] uppercase text-white/50 group-hover:text-white transition-colors">
+                  {ui.projects.expand}
+                  <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                </span>
+                <div className="h-8 w-8 rounded-full border border-white/10 flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-colors">
+                  <ArrowUpRight className="h-4 w-4 text-white/60 group-hover:text-white transition-colors" />
+                </div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
-      {active !== null && (
-        <div
-          ref={modalOverlayRef}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-6 backdrop-blur-md opacity-0"
-          onClick={handleClose}
-        >
-          <div
-            ref={modalContentRef}
-            className="max-w-2xl w-full rounded-3xl border border-white/10 bg-[rgba(5,8,14,0.96)] p-8 text-white shadow-2xl opacity-0"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="flex flex-col gap-6">
-              <div className="flex items-start justify-between">
+      {/* Case Study Slide-over Right Drawer */}
+      <AnimatePresence>
+        {active !== null && (
+          <>
+            {/* Dark Backdrop Overlay */}
+            <motion.div
+              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActive(null)}
+            />
+
+            {/* Slide-over Drawer Panel */}
+            <motion.div
+              className="fixed top-0 bottom-0 right-0 z-50 w-full sm:max-w-xl bg-[#0a0a0c]/95 backdrop-blur-2xl border-l border-white/5 shadow-2xl flex flex-col h-full"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 220 }}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between px-8 py-6 border-b border-white/5">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+                  <span className="text-[9px] font-mono tracking-widest text-white/40 uppercase">
                     {data.projects[active].period}
-                  </p>
-                  <h3 className="mt-3 text-2xl font-semibold">
+                  </span>
+                  <h3 className="text-xl font-medium text-white mt-1">
                     {data.projects[active].title}
                   </h3>
                 </div>
                 <button
-                  className="rounded-full border border-white/20 px-3.5 py-1.5 text-xs uppercase tracking-[0.3em] text-white/70 hover:bg-white/10 hover:text-white transition-colors"
-                  onClick={handleClose}
+                  onClick={() => setActive(null)}
+                  className="p-2 rounded-full border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all text-white/70 hover:text-white"
                   type="button"
+                  aria-label="Close details"
                 >
-                  {ui.projects.close}
+                  <X className="h-4 w-4" />
                 </button>
               </div>
-              <p className="text-sm text-white/70">
-                {data.projects[active].description}
-              </p>
-              <ul className="grid gap-3 text-sm text-white/60">
-                {data.projects[active].highlights.map((highlight) => (
-                  <li key={highlight} className="flex items-start gap-3">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent-current)]" />
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="flex flex-wrap gap-2">
-                {data.projects[active].stack.map((item) => (
-                  <GlassBadge key={item} label={item} />
-                ))}
+
+              {/* Scrollable details */}
+              <div className="flex-1 overflow-y-auto px-8 py-8 flex flex-col gap-6 scrollbar-none">
+                <div>
+                  <h4 className="text-[10px] font-mono tracking-widest text-white/30 uppercase mb-2">Overview</h4>
+                  <p className="text-sm font-light text-white/70 leading-relaxed">
+                    {data.projects[active].description}
+                  </p>
+                </div>
+
+                <div className="border-t border-white/5 pt-6">
+                  <h4 className="text-[10px] font-mono tracking-widest text-white/30 uppercase mb-4">Key Contributions</h4>
+                  <ul className="grid gap-3.5 text-xs font-light text-white/60">
+                    {data.projects[active].highlights.map((highlight) => (
+                      <li key={highlight} className="flex items-start gap-3 leading-relaxed">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/20" />
+                        <span>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="border-t border-white/5 pt-6">
+                  <h4 className="text-[10px] font-mono tracking-widest text-white/30 uppercase mb-3">Technologies used</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {data.projects[active].stack.map((item) => (
+                      <GlassBadge key={item} label={item} />
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-6 pt-4 border-t border-white/10">
+
+              {/* CTA links at bottom */}
+              <div className="px-8 py-6 border-t border-white/5 bg-[#08080a]/50 flex gap-4">
                 <a
                   href={data.projects[active].link}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-[color:var(--accent-current)] hover:text-white transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 rounded-full transition-all text-[11px] font-mono tracking-widest uppercase text-white"
                 >
-                  <Github className="h-4 w-4" />
-                  {ui.projects.visitGithub}
+                  <Github className="h-4 w-4 text-white/70" />
+                  <span>{ui.projects.visitGithub}</span>
                 </a>
-                {data.projects[active].demoLink ? (
+                {data.projects[active].demoLink && (
                   <a
                     href={data.projects[active].demoLink}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-[#7cf4ff] hover:text-white transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 py-3 border border-teal-500/20 bg-teal-500/10 hover:bg-teal-500/15 rounded-full transition-all text-[11px] font-mono tracking-widest uppercase text-teal-300"
                   >
                     <Eye className="h-4 w-4" />
-                    {ui.projects.visitDemo}
+                    <span>{ui.projects.visitDemo}</span>
                   </a>
-                ) : null}
+                )}
               </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

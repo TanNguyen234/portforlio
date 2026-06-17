@@ -4,66 +4,40 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playKeyboardSound, playBootEndSound } from "@/lib/audio";
 
-const LOGS = [
-  "SYSTEM COGNITION BOOT INITIATED...",
-  "ESTABLISHING SECURE PORTFOLIO CONNECTIVITY...",
-  "LOADING AI AGENT COGNITIVE CORE... [OK]",
-  "RETRIEVING FRAUD CLASSIFIER MODULES (XGBOOST)... [OK]",
-  "OPTIMIZING PIPELINES FOR 0.17% TARGET CLASS... [OK]",
-  "MOUNTING LANGGRAPH CONCURRENT DECISION NETWORKS... [OK]",
-  "CONFIGURING ASYNC MONGODB ENGINE & SSE STREAMERS... [OK]",
-  "DECRYPTING RESUME CREDENTIALS..."
-];
-
 export default function BootScreen({ onComplete }: { onComplete: () => void }) {
-  const [visibleLogs, setVisibleLogs] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
-    let lineIdx = 0;
     let isCancelled = false;
+    let currentProgress = 0;
 
-    const printLine = () => {
-      if (isCancelled) return;
-      if (lineIdx < LOGS.length) {
-        setVisibleLogs((prev) => [...prev, LOGS[lineIdx]]);
-        playKeyboardSound();
-        lineIdx++;
-        setTimeout(printLine, 280);
-      } else {
-        startProgress();
+    const interval = setInterval(() => {
+      if (isCancelled) {
+        clearInterval(interval);
+        return;
       }
-    };
+      
+      // Increment progress smoothly
+      const increment = Math.floor(Math.random() * 8) + 4;
+      currentProgress = Math.min(100, currentProgress + increment);
+      setProgress(currentProgress);
+      playKeyboardSound();
 
-    const startProgress = () => {
-      let currentProgress = 0;
-      const interval = setInterval(() => {
-        if (isCancelled) {
-          clearInterval(interval);
-          return;
-        }
-        currentProgress += 5;
-        setProgress(currentProgress);
-        playKeyboardSound();
-
-        if (currentProgress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            if (isCancelled) return;
-            playBootEndSound();
-            setIsFinished(true);
-            setTimeout(onComplete, 600);
-          }, 400);
-        }
-      }, 75);
-    };
-
-    playKeyboardSound();
-    printLine();
+      if (currentProgress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          if (isCancelled) return;
+          playBootEndSound();
+          setIsFinished(true);
+          setTimeout(onComplete, 800);
+        }, 500);
+      }
+    }, 120);
 
     return () => {
       isCancelled = true;
+      clearInterval(interval);
     };
   }, [onComplete]);
 
@@ -71,49 +45,49 @@ export default function BootScreen({ onComplete }: { onComplete: () => void }) {
     <AnimatePresence>
       {!isFinished && (
         <motion.div
-          className="fixed inset-0 z-50 flex flex-col justify-between bg-[#04020a] p-8 md:p-16 select-none font-mono text-xs md:text-sm scanlines"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#020203] select-none p-6"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, filter: "blur(20px)" }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between text-white/40 uppercase tracking-[0.2em] border-b border-white/10 pb-4">
-            <span>COGNITIVE CORE BOOT LOAD v1.10.0</span>
-            <span className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#39ff14] cyber-status-led" />
-              SECURE CONNECTED
-            </span>
+          {/* Subtle background glow */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/[0.01] to-transparent pointer-events-none" />
+
+          {/* Centered Minimal Counter */}
+          <div className="text-center relative z-10 flex flex-col items-center">
+            {/* Extremely thin elegant counter */}
+            <motion.h1 
+              className="font-sans font-extralight tracking-tighter text-[16vw] md:text-[10vw] text-white leading-none selection:bg-transparent"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {progress.toString().padStart(2, "0")}
+            </motion.h1>
+
+            {/* Micro progress line */}
+            <div className="w-16 h-[1px] bg-white/10 mt-8 relative overflow-hidden">
+              <motion.div 
+                className="absolute top-0 bottom-0 left-0 bg-white/50"
+                style={{ width: `${progress}%` }}
+                transition={{ duration: 0.1, ease: "easeOut" }}
+              />
+            </div>
+
+            {/* Elegant tiny subtitle */}
+            <motion.p 
+              className="text-[9px] font-mono tracking-[0.4em] text-white/30 uppercase mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+            >
+              Initializing Experience
+            </motion.p>
           </div>
 
-          {/* Terminal stream */}
-          <div className="flex-1 flex flex-col justify-start gap-2 py-8 overflow-y-auto cyber-terminal-text scrollbar-none">
-            {visibleLogs.map((log, index) => (
-              <div key={index} className="flex gap-2 items-start">
-                <span className="text-white/40">{`>`}</span>
-                <span>{log}</span>
-              </div>
-            ))}
-
-            {progress > 0 && (
-              <div className="mt-6 flex flex-col gap-2">
-                <div className="flex justify-between text-[#39ff14]/80">
-                  <span>DECRYPTING DATA MATRIX:</span>
-                  <span>{progress}%</span>
-                </div>
-                <div className="w-full h-4 border border-[#39ff14]/30 bg-black/40 p-0.5">
-                  <div
-                    className="h-full cyber-terminal-bar transition-all duration-75"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div className="text-white/30 uppercase tracking-[0.1em] flex justify-between border-t border-white/5 pt-4 text-[10px]">
-            <span>LOC_IP: 127.0.0.1</span>
-            <span>SYS_INIT: CORE_ACTIVE</span>
+          {/* Bottom Branding */}
+          <div className="absolute bottom-10 left-0 right-0 flex justify-center text-white/20 text-[9px] tracking-[0.3em] font-mono uppercase">
+            Nguyen Thanh Duy Tan &copy; 2026
           </div>
         </motion.div>
       )}
