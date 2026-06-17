@@ -39,7 +39,7 @@ export default function RootLayout({
       lang="en"
       className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable} h-full bg-black text-white antialiased`}
     >
-      <body className="min-h-full bg-black text-white">
+      <body className="min-h-full text-white bg-transparent">
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>

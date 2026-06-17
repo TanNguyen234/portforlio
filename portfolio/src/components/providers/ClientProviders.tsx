@@ -4,20 +4,11 @@ import { useEffect, useState } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import BackgroundSync from "@/components/effects/BackgroundSync";
 import CursorGlow from "@/components/effects/CursorGlow";
 import CursorTrail from "@/components/effects/CursorTrail";
-import ScrollVelocity from "@/components/effects/ScrollVelocity";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import BootScreen from "@/components/effects/BootScreen";
-
-import NeuralNet from "@/components/effects/NeuralNet";
-import HackingTerminal from "@/components/effects/HackingTerminal";
-import CircuitBoard from "@/components/effects/CircuitBoard";
-import PhysicsDecals from "@/components/effects/PhysicsDecals";
-import ElasticPageWarp from "@/components/effects/ElasticPageWarp";
 import { playHoverSound, playClickSound } from "@/lib/audio";
-import ParticleWaveGrid from "@/components/three/ParticleWaveGrid";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,17 +93,8 @@ export default function ClientProviders({
       ) : (
         <>
           {children}
-          <BackgroundSync />
-          <ScrollVelocity />
           <CursorGlow />
           <CursorTrail />
-
-          <ParticleWaveGrid />
-          <NeuralNet />
-          <HackingTerminal />
-          <CircuitBoard />
-          <PhysicsDecals />
-          <ElasticPageWarp />
         </>
       )}
     </LocaleProvider>

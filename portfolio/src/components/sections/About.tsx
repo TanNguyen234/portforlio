@@ -1,6 +1,6 @@
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { GraduationCap, BookOpen, Calendar, Award } from "lucide-react";
+import { GraduationCap, BookOpen, Calendar } from "lucide-react";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -72,14 +72,6 @@ export default function About({
                   <div>
                     <p className="text-[10px] font-mono tracking-wider text-white/30 uppercase">Period</p>
                     <p className="text-xs text-white/70 font-light mt-0.5">{data.about.education.period}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 pt-2 border-t border-white/5">
-                  <Award className="h-4 w-4 text-white/40 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-[10px] font-mono tracking-wider text-white/30 uppercase">Achievement</p>
-                    <p className="text-xs text-white/60 font-light mt-0.5 leading-relaxed">{data.about.education.desc}</p>
                   </div>
                 </div>
               </div>
