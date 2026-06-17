@@ -31,6 +31,35 @@ export default function HomePage() {
     const video = videoRef.current;
     if (!video) return;
 
+    // Ensure video doesn't play on its own
+    video.pause();
+    video.currentTime = 0;
+
+    let videoScrubTween: gsap.core.Tween | null = null;
+
+    const initScrollVideo = () => {
+      const duration = video.duration;
+      if (isNaN(duration) || duration === 0) return;
+
+      // Animate video's playhead (currentTime) relative to scroll progress
+      videoScrubTween = gsap.to(video, {
+        currentTime: duration,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "body",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.0, // Smooth transition between scroll updates
+        },
+      });
+    };
+
+    if (video.readyState >= 1) {
+      initScrollVideo();
+    } else {
+      video.addEventListener("loadedmetadata", initScrollVideo);
+    }
+
     // Scroll-driven 3D parallax transform (scale and tilt)
     gsap.fromTo(
       video,
@@ -84,7 +113,11 @@ export default function HomePage() {
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
+      video.removeEventListener("loadedmetadata", initScrollVideo);
       window.removeEventListener("mousemove", handleMouseMove);
+      if (videoScrubTween && videoScrubTween.scrollTrigger) {
+        videoScrubTween.scrollTrigger.kill();
+      }
     };
   }, []);
 
@@ -103,8 +136,7 @@ export default function HomePage() {
         <video
           ref={videoRef}
           src="/background.mp4"
-          autoPlay
-          loop
+          preload="auto"
           muted
           playsInline
           className="bg-video-container"
