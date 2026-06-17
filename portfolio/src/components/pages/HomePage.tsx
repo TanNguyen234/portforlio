@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import ExperienceTimeline from "@/components/sections/ExperienceTimeline";
@@ -22,6 +24,70 @@ export default function HomePage() {
   const t = uiText[locale];
   const localizedData = localizePortfolio(data, locale);
 
+  const videoWrapperRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useGSAP(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Scroll-driven 3D parallax transform (scale and tilt)
+    gsap.fromTo(
+      video,
+      {
+        scale: 1,
+        yPercent: 0,
+        rotateZ: 0,
+      },
+      {
+        scale: 1.15,
+        yPercent: 6, // Translate downward slightly to create depth
+        rotateZ: -1.5, // Subtle rotate tilt
+        scrollTrigger: {
+          trigger: "body",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.2,
+        },
+      }
+    );
+
+    // Mouse-move 3D parallax tilt (spring-like animation)
+    const xTo = gsap.quickTo(video, "rotateY", {
+      duration: 0.8,
+      ease: "power2.out",
+    });
+    const xTransTo = gsap.quickTo(video, "x", {
+      duration: 0.8,
+      ease: "power2.out",
+    });
+    const yTo = gsap.quickTo(video, "rotateX", {
+      duration: 0.8,
+      ease: "power2.out",
+    });
+    const yTransTo = gsap.quickTo(video, "y", {
+      duration: 0.8,
+      ease: "power2.out",
+    });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+      // Subtle 3D tilt and translation
+      xTo(x * 6);       // rotateY (yaw)
+      xTransTo(x * -15); // x translation
+      yTo(y * -6);      // rotateX (pitch)
+      yTransTo(y * -15); // y translation
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   const navItems = [
     { label: t.nav.about, href: "#about" },
     { label: t.nav.experience, href: "#experience" },
@@ -33,14 +99,17 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen bg-transparent text-[#f4f4f7] selection:bg-teal-500/20 selection:text-white overflow-hidden">
       {/* Looping Ambient 3D Video Background & Noise Overlay */}
-      <video
-        src="/background.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="bg-video-container"
-      />
+      <div className="bg-video-wrapper" ref={videoWrapperRef}>
+        <video
+          ref={videoRef}
+          src="/background.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="bg-video-container"
+        />
+      </div>
       <div className="grain-noise-overlay" />
 
       {/* Fluid Island Floating Header */}
