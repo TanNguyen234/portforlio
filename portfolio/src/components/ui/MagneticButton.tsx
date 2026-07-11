@@ -63,7 +63,7 @@ export default function MagneticButton({
         target={target}
         rel={rel}
       >
-        <span className="relative z-10">{children}</span>
+        <span className="relative z-10 flex items-center justify-center w-full h-full" style={{ gap: "inherit" }}>{children}</span>
         <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--accent-current)]/30 via-white/0 to-[color:var(--accent-current)]/20" />
         </span>
@@ -78,7 +78,7 @@ export default function MagneticButton({
       data-sound="hover"
       type="button"
     >
-      <span className="relative z-10">{children}</span>
+      <span className="relative z-10 flex items-center justify-center w-full h-full" style={{ gap: "inherit" }}>{children}</span>
       <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--accent-current)]/30 via-white/0 to-[color:var(--accent-current)]/20" />
       </span>

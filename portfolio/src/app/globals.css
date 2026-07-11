@@ -67,7 +67,6 @@ canvas {
   display: block;
 }
 
-@layer utilities {
   .section-shell {
     position: relative;
     padding: 90px 0 120px 0; /* Reduced top padding for tighter visual spacing */
@@ -130,8 +129,8 @@ canvas {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.72; /* Increased opacity for more presence */
-    filter: contrast(1.25) brightness(0.85) saturate(1.15); /* Boost contrast and prevent dull look */
+    opacity: 0.22; /* Subtle ambient opacity for premium look */
+    filter: contrast(1.1) brightness(0.6) saturate(0.85); /* Cooler, darker, and more integrated color */
     will-change: transform;
     transform-style: preserve-3d;
   }
@@ -163,7 +162,6 @@ canvas {
   .scroll-glitch-text:hover {
     opacity: 0.85;
   }
-}
 
 /* Base custom lenis setup */
 html.lenis {
