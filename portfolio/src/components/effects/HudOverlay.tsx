@@ -7,13 +7,11 @@ import { getMutedState, setMutedState, playClickSound } from "@/lib/audio";
 export default function HudOverlay() {
   const [coords, setCoords] = useState({ x: -100, y: -100 });
   const [scrollPercent, setScrollPercent] = useState(0);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(() => getMutedState());
   const [isHovering, setIsHovering] = useState(false);
   const visorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMuted(getMutedState());
-
     // Inject custom cursor hiding class
     document.documentElement.classList.add("custom-cursor-active");
 

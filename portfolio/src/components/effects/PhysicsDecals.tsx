@@ -34,7 +34,7 @@ export default function PhysicsDecals() {
     let width = window.innerWidth;
     let height = window.innerHeight;
     let rafId = 0;
-    let mouse = { x: -1000, y: -1000, active: false };
+    const mouse = { x: -1000, y: -1000, active: false };
 
     const resize = () => {
       width = window.innerWidth;

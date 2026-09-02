@@ -23,14 +23,7 @@ const getStoredLocale = (): Locale | null => {
 };
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
-
-  useEffect(() => {
-    const stored = getStoredLocale();
-    if (stored) {
-      setLocaleState(stored);
-    }
-  }, []);
+  const [locale, setLocaleState] = useState<Locale>(() => getStoredLocale() || "en");
 
   const setLocale = (next: Locale) => {
     setLocaleState(next);

@@ -17,20 +17,63 @@
     radial-gradient(800px 500px at 50% 80%, rgba(20, 184, 166, 0.05), transparent 70%);
 }
 
-/* Immersive Visual Mode Design Tokens */
+/* Immersive Visual Mode Design Tokens (V2) */
 [data-visual-mode="immersive"] {
-  --bg: #030305;
-  --bg-deep: #010102;
-  --fg: #f8fafc;
-  --muted: #94a3b8;
-  --accent: #0f172a;
+  --bg: #020204;
+  --bg-deep: #000001;
+  --fg: #f4f6f8;
+  --muted: #848895;
+  --accent: #0b0f19;
   --accent-light: #14b8a6;
   --accent-glow: rgba(20, 184, 166, 0.12);
-  --glass: rgba(6, 6, 9, 0.72);
-  --glass-border: rgba(20, 184, 166, 0.14);
-  --hero-ambient: radial-gradient(1200px 600px at 15% 15%, rgba(20, 184, 166, 0.07), transparent 60%),
-    radial-gradient(900px 600px at 85% 25%, rgba(14, 165, 233, 0.05), transparent 55%),
-    radial-gradient(800px 500px at 50% 80%, rgba(20, 184, 166, 0.04), transparent 70%);
+  --glass: rgba(6, 7, 10, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --hero-ambient: radial-gradient(1200px 600px at 15% 15%, rgba(20, 184, 166, 0.06), transparent 60%),
+    radial-gradient(900px 600px at 85% 25%, rgba(14, 165, 233, 0.04), transparent 55%),
+    radial-gradient(800px 500px at 50% 80%, rgba(20, 184, 166, 0.03), transparent 70%);
+
+  /* Semantic V2 Tokens */
+  --immersive-bg: #020204;
+  --immersive-surface: rgba(8, 9, 13, 0.65);
+  --immersive-surface-hot: rgba(14, 16, 24, 0.85);
+  --immersive-fg: #f4f6f8;
+  --immersive-muted: #848895;
+  --immersive-signal: #14b8a6;
+  --immersive-line: rgba(255, 255, 255, 0.08);
+  --immersive-line-strong: rgba(20, 184, 166, 0.35);
+  --immersive-depth: rgba(0, 0, 0, 0.7);
+  --immersive-specular: rgba(255, 255, 255, 0.12);
+}
+
+/* Immersive V2 Editorial Utilities */
+.editorial-rule {
+  background-color: var(--immersive-line, rgba(255, 255, 255, 0.08));
+}
+
+.editorial-rule-strong {
+  background-color: var(--immersive-line-strong, rgba(20, 184, 166, 0.35));
+}
+
+.editorial-surface {
+  background-color: var(--immersive-surface, rgba(8, 9, 13, 0.65));
+  border: 1px solid var(--immersive-line, rgba(255, 255, 255, 0.08));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.editorial-surface-hot {
+  background-color: var(--immersive-surface-hot, rgba(14, 16, 24, 0.85));
+  border: 1px solid var(--immersive-line-strong, rgba(20, 184, 166, 0.35));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.focus-ring-immersive {
+  outline: none;
+}
+.focus-ring-immersive:focus-visible {
+  outline: 2px solid #14b8a6;
+  outline-offset: 2px;
 }
 
 [data-visual-mode="immersive"] .double-bezel-outer {

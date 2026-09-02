@@ -31,7 +31,7 @@ export default function NeuralNet() {
     let width = 0;
     let height = 0;
     let particles: Particle[] = [];
-    let mouse = { x: -1000, y: -1000, active: false };
+    const mouse = { x: -1000, y: -1000, active: false };
     let rafId = 0;
 
     const resize = () => {

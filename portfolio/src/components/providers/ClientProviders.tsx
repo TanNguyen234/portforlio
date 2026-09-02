@@ -18,16 +18,10 @@ export default function ClientProviders({
 }: {
   children: React.ReactNode;
 }) {
-  const [booting, setBooting] = useState(true);
-
-  useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReduced) {
-      setBooting(false);
-    }
-  }, []);
+  const [booting, setBooting] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
 
   // Initialize Lenis smooth scroll and link it to GSAP ScrollTrigger
   useEffect(() => {

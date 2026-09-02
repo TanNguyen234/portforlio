@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlassBadge from "@/components/ui/GlassBadge";
-import MagneticButton from "@/components/ui/MagneticButton";
-import { ExternalLink, Eye, ChevronRight, X, ArrowUpRight } from "lucide-react";
+import { Eye, ChevronRight, X, ArrowUpRight } from "lucide-react";
 import { Github } from "@/components/icons/BrandIcons";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
+
+import { useProjectsController } from "@/components/sections/shared/useProjectsController";
 
 export default function ProjectsShowcase({
   data,
@@ -19,39 +17,9 @@ export default function ProjectsShowcase({
   data: PortfolioData;
   ui: UiText;
 }) {
-  const [active, setActive] = useState<number | null>(null);
-  const triggerRef = useRef<HTMLDivElement | null>(null);
-  const scrollerRef = useRef<HTMLDivElement | null>(null);
-
-  useGSAP(
-    () => {
-      const trigger = triggerRef.current;
-      const scroller = scrollerRef.current;
-      if (!trigger || !scroller) return;
-
-      const calculateScrollAmount = () => {
-        return -(scroller.scrollWidth - window.innerWidth);
-      };
-
-      gsap.fromTo(
-        scroller,
-        { x: 0 },
-        {
-          x: calculateScrollAmount,
-          ease: "none",
-          scrollTrigger: {
-            trigger: trigger,
-            pin: true,
-            start: "top top",
-            end: () => `+=${scroller.scrollWidth - window.innerWidth}`,
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        }
-      );
-    },
-    { scope: triggerRef }
-  );
+  const { active, setActive, triggerRef, scrollerRef } = useProjectsController({
+    projectCount: data.projects.length,
+  });
 
   return (
     <div

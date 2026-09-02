@@ -30,45 +30,39 @@ type Packet = {
   color: string;
 };
 
+const BOARD_NODES: Node[] = [
+  { id: 1, xPct: 8, yPct: 15, label: "SYS_BUS" },
+  { id: 2, xPct: 22, yPct: 15, label: "MEM_CLK" },
+  { id: 3, xPct: 15, yPct: 35, label: "CPU_VCORE" },
+  { id: 4, xPct: 35, yPct: 40, label: "PCI_E1" },
+  { id: 5, xPct: 50, yPct: 20, label: "IO_HUB" },
+  { id: 6, xPct: 92, yPct: 25, label: "AI_PIPE" },
+  { id: 7, xPct: 78, yPct: 45, label: "ML_DEC" },
+  { id: 8, xPct: 92, yPct: 65, label: "ML_LOG" },
+  { id: 9, xPct: 10, yPct: 75, label: "SEC_KEY" },
+  { id: 10, xPct: 25, yPct: 85, label: "DB_SYNC" },
+];
+
+const BOARD_TRACES: Trace[] = [
+  { fromNodeId: 1, toNodeId: 2, cornersPct: [] },
+  { fromNodeId: 1, toNodeId: 3, cornersPct: [[8, 25], [15, 30]] },
+  { fromNodeId: 2, toNodeId: 3, cornersPct: [[22, 28], [15, 33]] },
+  { fromNodeId: 3, toNodeId: 4, cornersPct: [[25, 35], [30, 40]] },
+  { fromNodeId: 4, toNodeId: 5, cornersPct: [[40, 40], [45, 35]] },
+  { fromNodeId: 6, toNodeId: 7, cornersPct: [[90, 35], [82, 41]] },
+  { fromNodeId: 7, toNodeId: 8, cornersPct: [[85, 45], [92, 52]] },
+  { fromNodeId: 9, toNodeId: 10, cornersPct: [[18, 75], [22, 85]] },
+  { fromNodeId: 3, toNodeId: 9, cornersPct: [[15, 55], [10, 65]] },
+  { fromNodeId: 5, toNodeId: 7, cornersPct: [[60, 25], [70, 40]] },
+];
+
 export default function CircuitBoard() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { isLowEnd, reduceMotion } = usePerformanceMode();
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [traces, setTraces] = useState<Trace[]>([]);
+  const [nodes] = useState<Node[]>(BOARD_NODES);
+  const [traces] = useState<Trace[]>(BOARD_TRACES);
   const packetsRef = useRef<Packet[]>([]);
-
-  useEffect(() => {
-    // Generate board node graph layout relative to screen percentage
-    const boardNodes: Node[] = [
-      { id: 1, xPct: 8, yPct: 15, label: "SYS_BUS" },
-      { id: 2, xPct: 22, yPct: 15, label: "MEM_CLK" },
-      { id: 3, xPct: 15, yPct: 35, label: "CPU_CORE_0" },
-      { id: 4, xPct: 35, yPct: 40, label: "GPU_SYS" },
-      { id: 5, xPct: 45, yPct: 25, label: "IO_INT" },
-      { id: 6, xPct: 90, yPct: 20, label: "NET_NODE_A" },
-      { id: 7, xPct: 78, yPct: 45, label: "ML_DEC" },
-      { id: 8, xPct: 92, yPct: 65, label: "ML_LOG" },
-      { id: 9, xPct: 10, yPct: 75, label: "SEC_KEY" },
-      { id: 10, xPct: 25, yPct: 85, label: "DB_SYNC" },
-    ];
-
-    const boardTraces: Trace[] = [
-      { fromNodeId: 1, toNodeId: 2, cornersPct: [] },
-      { fromNodeId: 1, toNodeId: 3, cornersPct: [[8, 25], [15, 30]] },
-      { fromNodeId: 2, toNodeId: 3, cornersPct: [[22, 28], [15, 33]] },
-      { fromNodeId: 3, toNodeId: 4, cornersPct: [[25, 35], [30, 40]] },
-      { fromNodeId: 4, toNodeId: 5, cornersPct: [[40, 40], [45, 35]] },
-      { fromNodeId: 6, toNodeId: 7, cornersPct: [[90, 35], [82, 41]] },
-      { fromNodeId: 7, toNodeId: 8, cornersPct: [[85, 45], [92, 52]] },
-      { fromNodeId: 9, toNodeId: 10, cornersPct: [[18, 75], [22, 85]] },
-      { fromNodeId: 3, toNodeId: 9, cornersPct: [[15, 55], [10, 65]] },
-      { fromNodeId: 5, toNodeId: 7, cornersPct: [[60, 25], [70, 40]] },
-    ];
-
-    setNodes(boardNodes);
-    setTraces(boardTraces);
-  }, []);
 
   useEffect(() => {
     if (isLowEnd || reduceMotion) return;
