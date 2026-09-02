@@ -4,6 +4,8 @@ import React, { useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { AICoreObject } from "./AICoreObject";
 import { SpatialField } from "./SpatialField";
+import { ArchitecturalHorizon } from "./ArchitecturalHorizon";
+import { AmbientFieldGlow } from "./AmbientFieldGlow";
 import { SceneCameraController } from "./SceneCameraController";
 import { WebGLErrorBoundary } from "./WebGLErrorBoundary";
 import { updateScrollProgress, updatePointerTarget } from "./sceneState";
@@ -90,13 +92,15 @@ export default function GlobalThreeCanvas() {
           }}
         >
           {/* Spatial Lighting */}
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 8, 5]} intensity={0.7} color="#f8fafc" />
-          <pointLight position={[2, 2, 3]} intensity={1.2} color="#14b8a6" distance={12} />
-          <pointLight position={[-3, -2, 2]} intensity={0.6} color="#0284c7" distance={10} />
+          <ambientLight intensity={0.55} />
+          <directionalLight position={[5, 8, 5]} intensity={0.75} color="#f8fafc" />
+          <pointLight position={[2, 2, 3]} intensity={1.3} color="#14b8a6" distance={14} />
+          <pointLight position={[-3, -2, 2]} intensity={0.7} color="#0284c7" distance={12} />
 
           {/* Orchestrated 3D Entities */}
           <SceneCameraController tier={graphicsTier} />
+          <AmbientFieldGlow tier={graphicsTier} />
+          <ArchitecturalHorizon tier={graphicsTier} />
           <AICoreObject tier={graphicsTier} />
           <SpatialField tier={graphicsTier} />
         </Canvas>

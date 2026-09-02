@@ -10,6 +10,7 @@ export interface SceneState {
   scrollVelocity: number;    // signed velocity
   activeSection: SectionKey;
   sectionProgress: number;   // 0 to 1 within active section
+  activeProjectIndex: number;
   pointer: {
     x: number;               // -1 to 1 normalized
     y: number;               // -1 to 1 normalized
@@ -23,6 +24,7 @@ export const sceneState: SceneState = {
   scrollVelocity: 0,
   activeSection: "hero",
   sectionProgress: 0,
+  activeProjectIndex: 0,
   pointer: {
     x: 0,
     y: 0,
@@ -30,6 +32,15 @@ export const sceneState: SceneState = {
     targetY: 0,
   },
 };
+
+export function setActiveProjectIndex(index: number) {
+  sceneState.activeProjectIndex = index;
+}
+
+export function updateSectionMeasurement(section: SectionKey, progress: number) {
+  sceneState.activeSection = section;
+  sceneState.sectionProgress = Math.max(0, Math.min(1, progress));
+}
 
 /**
  * Section anchor offsets cached for fast continuous interpolation.

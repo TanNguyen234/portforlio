@@ -10,40 +10,53 @@ interface AICoreProps {
   tier: GraphicsTier;
 }
 
+// Mathematically correct view-space Fresnel shader
 const FRESNEL_VERTEX_SHADER = `
   varying vec3 vNormal;
-  varying vec3 vPosition;
+  varying vec3 vViewPosition;
   uniform float uTime;
+  uniform float uDisplacement;
+
   void main() {
     vNormal = normalize(normalMatrix * normal);
-    vPosition = position;
-    // Subtle mathematical vertex breath
-    vec3 pos = position + normal * (sin(position.y * 4.0 + uTime * 1.5) * 0.025);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    
+    // Controlled geometric vertex breath
+    vec3 pos = position + normal * (sin(position.y * 3.5 + uTime * 1.4) * (0.025 + uDisplacement * 0.035));
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    
+    vViewPosition = -mvPosition.xyz;
+    gl_Position = projectionMatrix * mvPosition;
   }
 `;
 
 const FRESNEL_FRAGMENT_SHADER = `
   varying vec3 vNormal;
-  varying vec3 vPosition;
+  varying vec3 vViewPosition;
   uniform vec3 uFresnelColor;
   uniform vec3 uBaseColor;
   uniform float uIntensity;
+
   void main() {
-    // Fresnel calculation from view direction
-    vec3 viewDir = normalize(-vPosition);
-    float fresnel = pow(1.0 - max(0.0, dot(viewDir, vNormal)), 2.8);
+    vec3 normal = normalize(vNormal);
+    vec3 viewDir = normalize(vViewPosition);
+    
+    // View-space Fresnel computation
+    float fresnel = pow(1.0 - max(0.0, dot(viewDir, normal)), 2.5);
     vec3 color = mix(uBaseColor, uFresnelColor, fresnel * uIntensity);
-    gl_FragColor = vec4(color, 0.72 + fresnel * 0.28);
+    
+    gl_FragColor = vec4(color, 0.7 + fresnel * 0.3);
   }
 `;
 
 export function AICoreObject({ tier }: AICoreProps) {
   const groupRef = useRef<THREE.Group>(null);
   const outerMeshRef = useRef<THREE.Mesh>(null);
+  const cageMeshRef = useRef<THREE.Mesh>(null);
   const innerCoreRef = useRef<THREE.Mesh>(null);
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
+  const ring3Ref = useRef<THREE.Mesh>(null);
+  const satellitesGroupRef = useRef<THREE.Group>(null);
 
   // Performance-adjusted geometry detail
   const detail = tier === "full" ? 2 : 1;
@@ -51,21 +64,33 @@ export function AICoreObject({ tier }: AICoreProps) {
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
+      uDisplacement: { value: 0 },
       uFresnelColor: { value: new THREE.Color("#14b8a6") },
-      uBaseColor: { value: new THREE.Color("#05080a") },
-      uIntensity: { value: 1.2 },
+      uBaseColor: { value: new THREE.Color("#03070b") },
+      uIntensity: { value: 1.35 },
     }),
     []
   );
+
+  // Procedural satellite orbital parameters
+  const satellites = useMemo(() => {
+    const items = [];
+    const count = tier === "full" ? 8 : 4;
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2;
+      const radius = 2.3 + (i % 3) * 0.35;
+      const speed = 0.8 + (i % 2) * 0.4;
+      const inclination = ((i % 4) - 1.5) * 0.4;
+      items.push({ angle, radius, speed, inclination, color: i % 2 === 0 ? "#2dd4bf" : "#38bdf8" });
+    }
+    return items;
+  }, [tier]);
 
   useFrame((state, delta) => {
     const group = groupRef.current;
     if (!group) return;
 
-    if (tier === "static") {
-      // Keep completely still for static / reduced-motion tier
-      return;
-    }
+    if (tier === "static") return;
 
     const t = state.clock.getElapsedTime();
     const mesh = outerMeshRef.current;
@@ -80,83 +105,153 @@ export function AICoreObject({ tier }: AICoreProps) {
     ptr.y = THREE.MathUtils.damp(ptr.y, ptr.targetY, 4, delta);
 
     // Continuous scroll progress and section dynamics
-    const scroll = sceneState.globalScroll;
+    const activeSec = sceneState.activeSection;
+    const progress = sceneState.sectionProgress;
     const velocity = sceneState.scrollVelocity;
+    const projectIdx = sceneState.activeProjectIndex;
 
-    // Target positions based on continuous scroll
-    // Hero: [1.8, 0, 0] -> About: [2.2, 0.4, -1] -> Projects: [0, -0.5, -4] -> Contact: [0, 0, -0.5]
-    let targetX = 1.6;
-    let targetY = 0;
-    let targetZ = 0;
-    let targetScale = 1.1;
+    // Continuous parameter morphing across sections
+    let targetX = 1.7;
+    let targetY = 0.0;
+    let targetZ = 0.0;
+    let targetScale = 1.15;
+    let shellSeparation = 0.0;
+    let ringTension = 0.0;
+    let pulseRate = 2.4;
 
-    if (scroll < 0.25) {
-      // Hero to About transition
-      const p = scroll / 0.25;
-      targetX = THREE.MathUtils.lerp(1.6, 2.2, p);
-      targetY = THREE.MathUtils.lerp(0, 0.3, p);
-      targetZ = THREE.MathUtils.lerp(0, -1.2, p);
-      targetScale = THREE.MathUtils.lerp(1.1, 1.3, p);
-    } else if (scroll < 0.55) {
-      // About to Experience
-      const p = (scroll - 0.25) / 0.3;
-      targetX = THREE.MathUtils.lerp(2.2, -1.8, p);
-      targetY = THREE.MathUtils.lerp(0.3, -0.2, p);
-      targetZ = THREE.MathUtils.lerp(-1.2, -2.5, p);
-      targetScale = THREE.MathUtils.lerp(1.3, 0.95, p);
-    } else if (scroll < 0.8) {
-      // Experience to Projects
-      const p = (scroll - 0.55) / 0.25;
-      targetX = THREE.MathUtils.lerp(-1.8, 0, p);
-      targetY = THREE.MathUtils.lerp(-0.2, -0.6, p);
-      targetZ = THREE.MathUtils.lerp(-2.5, -3.8, p);
-      targetScale = THREE.MathUtils.lerp(0.95, 0.85, p);
-    } else {
-      // Skills to Contact
-      const p = (scroll - 0.8) / 0.2;
-      targetX = THREE.MathUtils.lerp(0, 0, p);
-      targetY = THREE.MathUtils.lerp(-0.6, 0.1, p);
-      targetZ = THREE.MathUtils.lerp(-3.8, -1.5, p);
-      targetScale = THREE.MathUtils.lerp(0.85, 1.0, p);
+    switch (activeSec) {
+      case "hero":
+        targetX = 1.7;
+        targetY = 0.0;
+        targetZ = 0.0;
+        targetScale = 1.18;
+        shellSeparation = 0.0;
+        ringTension = 0.0;
+        pulseRate = 2.4;
+        break;
+
+      case "about":
+        targetX = 2.2;
+        targetY = 0.35;
+        targetZ = -1.2;
+        targetScale = 1.28;
+        shellSeparation = 0.28;
+        ringTension = 0.35;
+        pulseRate = 2.8;
+        break;
+
+      case "experience":
+        targetX = -1.9;
+        targetY = -0.2;
+        targetZ = -2.2;
+        targetScale = 0.95;
+        shellSeparation = 0.15;
+        ringTension = 0.7;
+        pulseRate = 2.2;
+        break;
+
+      case "projects":
+        targetX = 0.0 + (projectIdx - 1) * 0.35;
+        targetY = -0.55;
+        targetZ = -3.4;
+        targetScale = 0.88;
+        shellSeparation = 0.08;
+        ringTension = 0.95;
+        pulseRate = 1.8;
+        break;
+
+      case "skills":
+        targetX = 1.8;
+        targetY = -0.25;
+        targetZ = -1.6;
+        targetScale = 1.05;
+        shellSeparation = 0.38;
+        ringTension = 0.5;
+        pulseRate = 3.0;
+        break;
+
+      case "contact":
+        targetX = 0.0;
+        targetY = 0.15;
+        targetZ = -1.2;
+        targetScale = 1.0;
+        shellSeparation = 0.0;
+        ringTension = 0.1;
+        pulseRate = 1.6;
+        break;
     }
 
-    // Add gentle pointer offset
-    targetX += ptr.x * 0.4;
-    targetY += ptr.y * 0.3;
+    targetY += Math.sin(progress * Math.PI) * 0.15;
+    targetX += ptr.x * 0.35;
+    targetY += ptr.y * 0.25;
 
-    // Damp transform
-    group.position.x = THREE.MathUtils.damp(group.position.x, targetX, 3.5, delta);
-    group.position.y = THREE.MathUtils.damp(group.position.y, targetY, 3.5, delta);
-    group.position.z = THREE.MathUtils.damp(group.position.z, targetZ, 3.5, delta);
+    // Damp position & scale
+    group.position.x = THREE.MathUtils.damp(group.position.x, targetX, 3.2, delta);
+    group.position.y = THREE.MathUtils.damp(group.position.y, targetY, 3.2, delta);
+    group.position.z = THREE.MathUtils.damp(group.position.z, targetZ, 3.2, delta);
 
-    const s = THREE.MathUtils.damp(group.scale.x, targetScale, 3, delta);
-    group.scale.set(s, s, s);
+    const currentScale = THREE.MathUtils.damp(group.scale.x, targetScale, 3.0, delta);
+    group.scale.set(currentScale, currentScale, currentScale);
 
-    // Autonomous slow rotation + tilt
-    group.rotation.y += delta * 0.18 + Math.abs(velocity) * 0.0002;
-    group.rotation.x = THREE.MathUtils.damp(group.rotation.x, ptr.y * 0.2, 3, delta);
-    group.rotation.z = THREE.MathUtils.damp(group.rotation.z, -ptr.x * 0.15, 3, delta);
+    // Shell separation morphing
+    if (outerMeshRef.current) {
+      const outerScale = THREE.MathUtils.damp(
+        outerMeshRef.current.scale.x,
+        1.0 + shellSeparation,
+        3.0,
+        delta
+      );
+      outerMeshRef.current.scale.set(outerScale, outerScale, outerScale);
+    }
+    if (cageMeshRef.current) {
+      const cageScale = THREE.MathUtils.damp(
+        cageMeshRef.current.scale.x,
+        1.0 + shellSeparation * 1.18,
+        3.0,
+        delta
+      );
+      cageMeshRef.current.scale.set(cageScale, cageScale, cageScale);
+    }
 
-    // Subtle counter-rotation for internal orbital rings
+    // Gyroscopic rotations
+    group.rotation.y += delta * 0.16 + Math.abs(velocity) * 0.00018;
+    group.rotation.x = THREE.MathUtils.damp(group.rotation.x, ptr.y * 0.18, 3, delta);
+    group.rotation.z = THREE.MathUtils.damp(group.rotation.z, -ptr.x * 0.12, 3, delta);
+
+    // 3 Concentric Gimbal Rings
     if (ring1Ref.current) {
-      ring1Ref.current.rotation.x += delta * 0.35;
-      ring1Ref.current.rotation.y += delta * 0.2;
+      ring1Ref.current.rotation.x += delta * (0.32 - ringTension * 0.15);
+      ring1Ref.current.rotation.y += delta * (0.22 + ringTension * 0.1);
+      const r1 = THREE.MathUtils.damp(ring1Ref.current.scale.z, 1.0 - ringTension * 0.5, 3.0, delta);
+      ring1Ref.current.scale.set(1, 1, r1);
     }
     if (ring2Ref.current) {
-      ring2Ref.current.rotation.y -= delta * 0.4;
-      ring2Ref.current.rotation.z += delta * 0.25;
+      ring2Ref.current.rotation.y -= delta * (0.36 - ringTension * 0.15);
+      ring2Ref.current.rotation.z += delta * (0.24 + ringTension * 0.08);
+      const r2 = THREE.MathUtils.damp(ring2Ref.current.scale.x, 1.0 - ringTension * 0.4, 3.0, delta);
+      ring2Ref.current.scale.set(r2, 1, 1);
+    }
+    if (ring3Ref.current) {
+      ring3Ref.current.rotation.x += delta * 0.28;
+      ring3Ref.current.rotation.z -= delta * 0.32;
     }
 
-    // Inner core heartbeat pulse
+    // Inner core pulse
     if (innerCoreRef.current) {
-      const pulse = 1.0 + Math.sin(t * 2.8) * 0.06;
+      const pulse = 1.0 + Math.sin(t * pulseRate) * (0.05 + shellSeparation * 0.04);
       innerCoreRef.current.scale.set(pulse, pulse, pulse);
+    }
+
+    // Satellite orbital animations
+    if (satellitesGroupRef.current) {
+      satellitesGroupRef.current.rotation.y += delta * 0.4;
+      satellitesGroupRef.current.rotation.x += delta * 0.15;
     }
   });
 
   return (
-    <group ref={groupRef} position={[1.6, 0, 0]}>
-      {/* Outer Faceted Geometric Shell with Declarative ShaderMaterial */}
+    <group ref={groupRef} position={[1.7, 0, 0]}>
+      {/* Outer Faceted Geometric Shell */}
       <mesh ref={outerMeshRef}>
         <icosahedronGeometry args={[1.35, detail]} />
         <shaderMaterial
@@ -171,27 +266,51 @@ export function AICoreObject({ tier }: AICoreProps) {
       </mesh>
 
       {/* Outer Wireframe Cage Layer */}
-      <mesh>
+      <mesh ref={cageMeshRef}>
         <icosahedronGeometry args={[1.38, detail]} />
         <meshBasicMaterial
           color="#2dd4bf"
           wireframe
           transparent
-          opacity={tier === "full" ? 0.25 : 0.15}
+          opacity={tier === "full" ? 0.22 : 0.12}
+          depthWrite={false}
         />
       </mesh>
 
-      {/* Concentric Technical Data Orbit Ring 1 */}
+      {/* Multi-Axis Gimbal Ring 1 */}
       <mesh ref={ring1Ref}>
         <torusGeometry args={[1.85, 0.012, 12, 48]} />
-        <meshBasicMaterial color="#14b8a6" transparent opacity={0.3} />
+        <meshBasicMaterial color="#14b8a6" transparent opacity={0.35} depthWrite={false} />
       </mesh>
 
-      {/* Concentric Technical Data Orbit Ring 2 */}
+      {/* Multi-Axis Gimbal Ring 2 */}
       <mesh ref={ring2Ref} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[2.1, 0.008, 12, 48]} />
-        <meshBasicMaterial color="#0ea5e9" transparent opacity={0.2} />
+        <torusGeometry args={[2.1, 0.009, 12, 48]} />
+        <meshBasicMaterial color="#0ea5e9" transparent opacity={0.25} depthWrite={false} />
       </mesh>
+
+      {/* Multi-Axis Gimbal Ring 3 */}
+      <mesh ref={ring3Ref} rotation={[0, Math.PI / 4, Math.PI / 3]}>
+        <torusGeometry args={[2.35, 0.007, 12, 48]} />
+        <meshBasicMaterial color="#2dd4bf" transparent opacity={0.18} depthWrite={false} />
+      </mesh>
+
+      {/* Satellite Quantum Data Nodes */}
+      <group ref={satellitesGroupRef}>
+        {satellites.map((sat, i) => (
+          <mesh
+            key={i}
+            position={[
+              Math.cos(sat.angle) * sat.radius,
+              Math.sin(sat.angle * 2) * sat.inclination,
+              Math.sin(sat.angle) * sat.radius,
+            ]}
+          >
+            <sphereGeometry args={[0.045, 12, 12]} />
+            <meshBasicMaterial color={sat.color} transparent opacity={0.8} />
+          </mesh>
+        ))}
+      </group>
 
       {/* Inner Glowing Intelligence Core */}
       <mesh ref={innerCoreRef}>
@@ -199,9 +318,9 @@ export function AICoreObject({ tier }: AICoreProps) {
         <meshStandardMaterial
           color="#0f766e"
           emissive="#14b8a6"
-          emissiveIntensity={0.6}
-          roughness={0.25}
-          metalness={0.8}
+          emissiveIntensity={0.75}
+          roughness={0.18}
+          metalness={0.85}
         />
       </mesh>
     </group>
