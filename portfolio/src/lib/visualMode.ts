@@ -10,14 +10,14 @@ export interface VisualModeState {
 
 /**
  * Returns the default visual mode based on environment variables.
- * Priority: NEXT_PUBLIC_PORTFOLIO_VISUAL_MODE -> "legacy"
+ * Priority: NEXT_PUBLIC_PORTFOLIO_VISUAL_MODE -> "immersive"
  */
 export function getDefaultVisualMode(): VisualMode {
   const envMode = process.env.NEXT_PUBLIC_PORTFOLIO_VISUAL_MODE?.trim().toLowerCase();
-  if (envMode === "immersive") {
-    return "immersive";
+  if (envMode === "legacy") {
+    return "legacy";
   }
-  return "legacy";
+  return "immersive";
 }
 
 /**
