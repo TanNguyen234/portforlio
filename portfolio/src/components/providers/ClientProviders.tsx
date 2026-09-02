@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CursorGlow from "@/components/effects/CursorGlow";
 import CursorTrail from "@/components/effects/CursorTrail";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
+import { VisualModeProvider } from "@/components/providers/VisualModeProvider";
 import BootScreen from "@/components/effects/BootScreen";
 import { playHoverSound, playClickSound } from "@/lib/audio";
 
@@ -87,16 +88,18 @@ export default function ClientProviders({
   }, [booting]);
 
   return (
-    <LocaleProvider>
-      {booting ? (
-        <BootScreen onComplete={() => setBooting(false)} />
-      ) : (
-        <>
-          {children}
-          <CursorGlow />
-          <CursorTrail />
-        </>
-      )}
-    </LocaleProvider>
+    <VisualModeProvider>
+      <LocaleProvider>
+        {booting ? (
+          <BootScreen onComplete={() => setBooting(false)} />
+        ) : (
+          <>
+            {children}
+            <CursorGlow />
+            <CursorTrail />
+          </>
+        )}
+      </LocaleProvider>
+    </VisualModeProvider>
   );
 }

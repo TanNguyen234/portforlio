@@ -11,16 +11,24 @@ import ExperienceTimeline from "@/components/sections/ExperienceTimeline";
 import ProjectsShowcase from "@/components/sections/ProjectsShowcase";
 import SkillsConstellation from "@/components/sections/SkillsConstellation";
 import Contact from "@/components/sections/Contact";
+import dynamic from "next/dynamic";
 import { usePortfolioData } from "@/lib/usePortfolioData";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useVisualMode } from "@/components/providers/VisualModeProvider";
 import { uiText } from "@/lib/i18n";
 import { localizePortfolio } from "@/lib/portfolioLocale";
 import { FileText, Menu, X, ArrowUpRight } from "lucide-react";
 import { Github, Linkedin } from "@/components/icons/BrandIcons";
 
+const GlobalThreeCanvas = dynamic(
+  () => import("@/components/three/immersive/GlobalThreeCanvas"),
+  { ssr: false }
+);
+
 export default function HomePage() {
   const { data } = usePortfolioData();
   const { locale, toggleLocale } = useLocale();
+  const { isImmersive } = useVisualMode();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const t = uiText[locale];
   const localizedData = localizePortfolio(data, locale);
@@ -84,7 +92,7 @@ export default function HomePage() {
     );
 
     // Mouse-move 3D parallax tilt (spring-like animation)
-    const xTo = gsap.quickTo(video, "rotateY", {
+    const xTo = gsap.quickTo(video, "rotationY", {
       duration: 0.8,
       ease: "power2.out",
     });
@@ -92,7 +100,7 @@ export default function HomePage() {
       duration: 0.8,
       ease: "power2.out",
     });
-    const yTo = gsap.quickTo(video, "rotateX", {
+    const yTo = gsap.quickTo(video, "rotationX", {
       duration: 0.8,
       ease: "power2.out",
     });
@@ -102,13 +110,14 @@ export default function HomePage() {
     });
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (!videoRef.current) return;
       const x = (e.clientX / window.innerWidth - 0.5) * 2;
       const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
       // Subtle 3D tilt and translation
-      xTo(x * 6);       // rotateY (yaw)
+      xTo(x * 6);       // rotationY (yaw)
       xTransTo(x * -15); // x translation
-      yTo(y * -6);      // rotateX (pitch)
+      yTo(y * -6);      // rotationX (pitch)
       yTransTo(y * -15); // y translation
     };
 
@@ -121,7 +130,7 @@ export default function HomePage() {
         transformTrigger.scrollTrigger.kill();
       }
     };
-  }, []);
+  }, [isImmersive]);
 
   const navItems = [
     { label: t.nav.about, href: "#about" },
@@ -133,19 +142,25 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen bg-transparent text-[#f4f4f7] selection:bg-teal-500/20 selection:text-white overflow-hidden">
-      {/* Looping Ambient 3D Video Background & Noise Overlay */}
-      <div className="bg-video-wrapper" ref={videoWrapperRef}>
-        <video
-          ref={videoRef}
-          src="/background.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="bg-video-container"
-        />
-      </div>
-      <div className="grain-noise-overlay" />
+      {/* Visual Background: Legacy Ambient Video or Immersive Three.js Canvas */}
+      {isImmersive ? (
+        <GlobalThreeCanvas />
+      ) : (
+        <>
+          <div className="bg-video-wrapper" ref={videoWrapperRef}>
+            <video
+              ref={videoRef}
+              src="/background.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="bg-video-container"
+            />
+          </div>
+          <div className="grain-noise-overlay" />
+        </>
+      )}
 
       {/* Fluid Island Floating Header */}
       <header className="fixed top-6 left-0 right-0 z-40 w-full px-4 md:px-8 pointer-events-none flex justify-center">
@@ -245,7 +260,7 @@ export default function HomePage() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            className="fixed inset-0 z-30 flex flex-col justify-between bg-[#020203]/95 backdrop-blur-2xl p-8 pt-28 md:hidden"
+            className="fixed inset-0 z-45 flex flex-col justify-between bg-[#020203]/95 backdrop-blur-2xl p-8 pt-28 md:hidden"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
