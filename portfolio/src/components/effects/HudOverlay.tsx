@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Volume2, VolumeX, ShieldCheck, Cpu } from "lucide-react";
+import { SpeakerHigh, SpeakerSimpleX, ShieldCheck, Cpu } from "@phosphor-icons/react";
 import { getMutedState, setMutedState, playClickSound } from "@/lib/audio";
 
 export default function HudOverlay() {
@@ -83,11 +83,11 @@ export default function HudOverlay() {
       {/* Floating System Stats */}
       <div className="fixed bottom-6 left-6 z-40 hidden flex-col gap-1.5 font-mono text-[9px] uppercase tracking-[0.25em] text-[color:var(--accent)]/55 select-none md:flex">
         <div className="flex items-center gap-1.5">
-          <Cpu className="h-3 w-3 text-[color:var(--accent)]" />
+          <Cpu className="h-3 w-3 text-[color:var(--accent)]" weight="duotone" />
           <span>GRID_COORD: X_{coords.x} Y_{coords.y}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <ShieldCheck className="h-3 w-3 text-[#39ff14]" />
+          <ShieldCheck className="h-3 w-3 text-[#39ff14]" weight="duotone" />
           <span>SYS_STATUS: <span className="text-[#39ff14]">NOMINAL</span></span>
         </div>
       </div>
@@ -104,9 +104,9 @@ export default function HudOverlay() {
           type="button"
         >
           {muted ? (
-            <VolumeX className="h-3.5 w-3.5" />
+            <SpeakerSimpleX className="h-3.5 w-3.5" weight="light" />
           ) : (
-            <Volume2 className="h-3.5 w-3.5 text-[color:var(--accent)]" />
+            <SpeakerHigh className="h-3.5 w-3.5 text-[color:var(--accent)]" weight="light" />
           )}
         </button>
       </div>

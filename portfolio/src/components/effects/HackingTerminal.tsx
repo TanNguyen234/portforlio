@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Terminal as TermIcon, X, ShieldAlert } from "lucide-react";
+import { TerminalWindow as TermIcon, X, ShieldWarning } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playClickSound, playKeyboardSound } from "@/lib/audio";
 
@@ -114,7 +114,7 @@ export default function HackingTerminal() {
         title="Open System Shell"
         type="button"
       >
-        <TermIcon className="h-4 w-4 text-[color:var(--accent-current)] animate-pulse" />
+        <TermIcon className="h-4 w-4 text-[color:var(--accent-current)] animate-pulse" weight="duotone" />
         <span className="font-mono text-[8px] uppercase tracking-[0.2em] [writing-mode:vertical-lr] mt-1 select-none">
           SYS_SHELL
         </span>
@@ -143,7 +143,7 @@ export default function HackingTerminal() {
                 className="text-white/40 hover:text-white transition-colors cursor-pointer"
                 type="button"
               >
-                <X className="h-4 w-4" />
+                <X className="h-4 w-4" weight="light" />
               </button>
             </div>
 
@@ -185,7 +185,7 @@ export default function HackingTerminal() {
                 className="px-2.5 py-1.5 border border-[#ff0055]/30 text-[#ff0055] bg-transparent hover:bg-[#ff0055]/15 rounded transition-all flex items-center gap-1 cursor-pointer animate-pulse"
                 type="button"
               >
-                <ShieldAlert className="h-3 w-3" />
+                <ShieldWarning className="h-3 w-3" weight="duotone" />
                 HACK
               </button>
               <button

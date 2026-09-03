@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Cpu, Activity, Layers, RefreshCw } from "lucide-react";
+import { Pulse, Stack, Cpu, ArrowsClockwise } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playClickSound } from "@/lib/audio";
 import type { PortfolioData } from "@/lib/portfolio";
@@ -99,7 +99,7 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
           }`}
           type="button"
         >
-          <Activity className="h-3.5 w-3.5" />
+          <Pulse className="h-3.5 w-3.5" weight="light" />
           <span>MLOPS_MONITOR</span>
         </button>
         <button
@@ -111,7 +111,7 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
           }`}
           type="button"
         >
-          <Layers className="h-3.5 w-3.5" />
+          <Stack className="h-3.5 w-3.5" weight="duotone" />
           <span>LANGGRAPH_MAP</span>
         </button>
       </div>
@@ -210,7 +210,7 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
                       ? "border-[#00f0ff] bg-[#00f0ff]/20 shadow-[0_0_15px_#00f0ff]"
                       : "border-white/20 bg-black"
                   }`}>
-                    <Cpu className={`h-4 w-4 ${activeNode === "cv_parser" ? "text-[#00f0ff]" : "text-white/40"}`} />
+                    <Cpu className={`h-4 w-4 ${activeNode === "cv_parser" ? "text-[#00f0ff]" : "text-white/40"}`} weight="duotone" />
                   </div>
                   <span className="text-[8px] tracking-[0.05em] uppercase text-white/60">CV_PARSER</span>
                 </div>
@@ -221,7 +221,7 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
                       ? "border-[#ff007f] bg-[#ff007f]/20 shadow-[0_0_15px_#ff007f]"
                       : "border-white/20 bg-black"
                   }`}>
-                    <RefreshCw className={`h-3.5 w-3.5 ${activeNode === "market_RAG" ? "text-[#ff007f]" : "text-white/40"}`} />
+                    <ArrowsClockwise className={`h-3.5 w-3.5 ${activeNode === "market_RAG" ? "text-[#ff007f]" : "text-white/40"}`} weight="light" />
                   </div>
                   <span className="text-[8px] tracking-[0.05em] uppercase text-white/60">RAG_TAVILY</span>
                 </div>
@@ -232,7 +232,7 @@ export default function CyberConsole({ data, ui }: CyberConsoleProps) {
                       ? "border-[#39ff14] bg-[#39ff14]/20 shadow-[0_0_15px_#39ff14]"
                       : "border-white/20 bg-black"
                   }`}>
-                    <Layers className={`h-4 w-4 ${activeNode === "meta_evaluator" ? "text-[#39ff14]" : "text-white/40"}`} />
+                    <Stack className={`h-4 w-4 ${activeNode === "meta_evaluator" ? "text-[#39ff14]" : "text-white/40"}`} weight="duotone" />
                   </div>
                   <span className="text-[8px] tracking-[0.05em] uppercase text-white/60">META_EVAL</span>
                 </div>
