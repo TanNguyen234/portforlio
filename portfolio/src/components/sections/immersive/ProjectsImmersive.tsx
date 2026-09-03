@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { CaretRight, X, ArrowUpRight, Eye } from "@phosphor-icons/react";
 import { Github } from "@/components/icons/BrandIcons";
+import { TechBadge } from "@/components/icons/TechIcon";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 import { useProjectsController } from "@/components/sections/shared/useProjectsController";
@@ -92,12 +93,7 @@ export function ProjectsImmersive({ data, ui }: ProjectsImmersiveProps) {
                   {/* Tech Stack Chips */}
                   <div className="flex flex-wrap gap-2 pt-2">
                     {project.stack.map((item) => (
-                      <span
-                        key={item}
-                        className="px-2.5 py-1 text-[10px] font-mono tracking-wider uppercase text-white/70 bg-white/5 border border-white/10"
-                      >
-                        {item}
-                      </span>
+                      <TechBadge key={item} name={item} />
                     ))}
                   </div>
                 </div>
@@ -196,12 +192,7 @@ export function ProjectsImmersive({ data, ui }: ProjectsImmersiveProps) {
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {data.projects[active].stack.map((item) => (
-                      <span
-                        key={item}
-                        className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-white/80 bg-white/5 border border-white/10"
-                      >
-                        {item}
-                      </span>
+                      <TechBadge key={item} name={item} />
                     ))}
                   </div>
                 </div>

@@ -2,6 +2,7 @@
 
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
+import { TechIcon } from "@/components/icons/TechIcon";
 
 interface SkillsImmersiveProps {
   data: PortfolioData;
@@ -54,9 +55,9 @@ export function SkillsImmersive({ data, ui }: SkillsImmersiveProps) {
                       key={item}
                       className="group/item flex items-center gap-3 text-xs font-light text-slate-300 hover:text-white transition-colors"
                     >
-                      <span
-                        aria-hidden="true"
-                        className="h-1 w-1 bg-teal-400/50 group-hover/item:bg-teal-400 transition-colors shrink-0"
+                      <TechIcon
+                        name={item}
+                        className="h-3.5 w-3.5 text-teal-400/75 group-hover/item:text-teal-300 group-hover/item:scale-110 transition-all shrink-0"
                       />
                       <span>{item}</span>
                     </li>
