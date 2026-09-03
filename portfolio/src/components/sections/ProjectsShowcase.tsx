@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlassBadge from "@/components/ui/GlassBadge";
-import { Eye, ChevronRight, X, ArrowUpRight } from "lucide-react";
+import { Eye, CaretRight, X, ArrowUpRight } from "@phosphor-icons/react";
 import { Github } from "@/components/icons/BrandIcons";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
@@ -82,10 +82,10 @@ export default function ProjectsShowcase({
               <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-[0.2em] uppercase text-white/50 group-hover:text-white transition-colors">
                   {ui.projects.expand}
-                  <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                  <CaretRight className="h-3 w-3 transition-transform group-hover:translate-x-1" weight="light" />
                 </span>
                 <div className="h-8 w-8 rounded-full border border-white/10 flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-colors">
-                  <ArrowUpRight className="h-4 w-4 text-white/60 group-hover:text-white transition-colors" />
+                  <ArrowUpRight className="h-4 w-4 text-white/60 group-hover:text-white transition-colors" weight="light" />
                 </div>
               </div>
             </div>
@@ -130,7 +130,7 @@ export default function ProjectsShowcase({
                   type="button"
                   aria-label="Close details"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-4 w-4" weight="light" />
                 </button>
               </div>
 
@@ -183,7 +183,7 @@ export default function ProjectsShowcase({
                     rel="noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 py-3 border border-teal-500/20 bg-teal-500/10 hover:bg-teal-500/15 rounded-full transition-all text-[11px] font-mono tracking-widest uppercase text-teal-300"
                   >
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-4 w-4" weight="light" />
                     <span>{ui.projects.visitDemo}</span>
                   </a>
                 )}

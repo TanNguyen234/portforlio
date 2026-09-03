@@ -1,6 +1,6 @@
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { GraduationCap, BookOpen, Calendar } from "lucide-react";
+import { GraduationCap, BookOpen, CalendarBlank } from "@phosphor-icons/react";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -46,7 +46,7 @@ export default function About({
               
               <div className="flex items-center gap-3 border-b border-white/5 pb-4">
                 <div className="p-2 rounded-full bg-white/5 border border-white/10 text-white/70">
-                  <GraduationCap className="h-4.5 w-4.5" />
+                  <GraduationCap className="h-4.5 w-4.5" weight="duotone" />
                 </div>
                 <div>
                   <p className="text-[10px] font-mono tracking-[0.25em] text-white/40 uppercase">
@@ -60,7 +60,7 @@ export default function About({
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <BookOpen className="h-4 w-4 text-white/40 mt-0.5 shrink-0" />
+                  <BookOpen className="h-4 w-4 text-white/40 mt-0.5 shrink-0" weight="duotone" />
                   <div>
                     <p className="text-[10px] font-mono tracking-wider text-white/30 uppercase">Major</p>
                     <p className="text-xs text-white/70 font-light mt-0.5">{data.about.education.major}</p>
@@ -68,7 +68,7 @@ export default function About({
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <Calendar className="h-4 w-4 text-white/40 mt-0.5 shrink-0" />
+                  <CalendarBlank className="h-4 w-4 text-white/40 mt-0.5 shrink-0" weight="light" />
                   <div>
                     <p className="text-[10px] font-mono tracking-wider text-white/30 uppercase">Period</p>
                     <p className="text-xs text-white/70 font-light mt-0.5">{data.about.education.period}</p>

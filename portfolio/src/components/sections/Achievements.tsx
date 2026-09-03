@@ -1,5 +1,5 @@
 import SectionHeading from "@/components/ui/SectionHeading";
-import { Award } from "lucide-react";
+import { Trophy } from "@phosphor-icons/react";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -30,7 +30,7 @@ export default function Achievements({
             >
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="rounded-2xl border border-orange-500/20 bg-orange-500/5 p-3 text-orange-400 shrink-0 relative z-10">
-                <Award className="h-5 w-5" />
+                <Trophy className="h-5 w-5" weight="duotone" />
               </div>
               <span className="relative z-10 leading-relaxed">{achievement}</span>
             </div>

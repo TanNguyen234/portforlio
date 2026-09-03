@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { Mail, Phone, MapPin, Download, ArrowUpRight } from "lucide-react";
+import { EnvelopeSimple, PhoneCall, MapPinLine, DownloadSimple, ArrowUpRight } from "@phosphor-icons/react";
 import { Github, Linkedin } from "@/components/icons/BrandIcons";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
@@ -81,21 +81,21 @@ export default function Contact({
                 
                 <div className="contact-item flex items-center gap-3.5 opacity-0">
                   <div className="p-2 rounded-full bg-white/5 border border-white/10 text-white/40">
-                    <MapPin className="h-4 w-4" />
+                    <MapPinLine className="h-4 w-4" weight="duotone" />
                   </div>
                   <span>{data.contact.location}</span>
                 </div>
 
                 <div className="contact-item flex items-center gap-3.5 opacity-0">
                   <div className="p-2 rounded-full bg-white/5 border border-white/10 text-white/40">
-                    <Mail className="h-4 w-4" />
+                    <EnvelopeSimple className="h-4 w-4" weight="duotone" />
                   </div>
                   <a href={`mailto:${data.contact.email}`} className="hover:text-white transition-colors">{data.contact.email}</a>
                 </div>
 
                 <div className="contact-item flex items-center gap-3.5 opacity-0">
                   <div className="p-2 rounded-full bg-white/5 border border-white/10 text-white/40">
-                    <Phone className="h-4 w-4" />
+                    <PhoneCall className="h-4 w-4" weight="duotone" />
                   </div>
                   <span>{data.contact.phone}</span>
                 </div>
@@ -109,7 +109,7 @@ export default function Contact({
                   >
                     <Github className="h-4 w-4" />
                     <span className="font-mono tracking-wider">Github</span>
-                    <ArrowUpRight className="h-3 w-3 opacity-50" />
+                    <ArrowUpRight className="h-3 w-3 opacity-50" weight="light" />
                   </a>
                   {data.contact.linkedin && (
                     <a
@@ -120,7 +120,7 @@ export default function Contact({
                     >
                       <Linkedin className="h-4 w-4" />
                       <span className="font-mono tracking-wider">LinkedIn</span>
-                      <ArrowUpRight className="h-3 w-3 opacity-50" />
+                      <ArrowUpRight className="h-3 w-3 opacity-50" weight="light" />
                     </a>
                   )}
                 </div>
@@ -135,7 +135,7 @@ export default function Contact({
                     className="w-full flex items-center justify-center gap-3 px-6 py-3.5 border border-white/10 bg-white/5 hover:bg-white/10 rounded-full transition-all text-[11px] font-mono tracking-widest uppercase text-white shadow-md"
                     href={`mailto:${data.contact.email}`}
                   >
-                    <Mail className="h-4 w-4 text-white/70" />
+                    <EnvelopeSimple className="h-4 w-4 text-white/70" weight="bold" />
                     <span>Send Message</span>
                   </MagneticButton>
                 </div>
@@ -148,7 +148,7 @@ export default function Contact({
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <Download className="h-4 w-4 text-white/40" />
+                      <DownloadSimple className="h-4 w-4 text-white/40" weight="light" />
                       <span>{ui.contact.cv}</span>
                     </MagneticButton>
                   </div>

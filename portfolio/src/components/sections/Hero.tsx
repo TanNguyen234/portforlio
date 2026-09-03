@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import AnimatedText from "@/components/ui/AnimatedText";
 import MagneticButton from "@/components/ui/MagneticButton";
-import { ArrowDown, Mail, ArrowUpRight, Cpu, Terminal, MapPin } from "lucide-react";
+import { CaretDown, EnvelopeSimple, ArrowUpRight, Cpu, TerminalWindow, MapPinLine } from "@phosphor-icons/react";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -117,7 +117,7 @@ export default function Hero({
             >
               <span>{ui.hero.ctaPrimary}</span>
               <div className="flex items-center justify-center h-5 w-5 rounded-full bg-white/10 border border-white/20">
-                <ArrowUpRight className="arrow-icon h-3.5 w-3.5 text-white" />
+                <ArrowUpRight className="arrow-icon h-3.5 w-3.5 text-white" weight="light" />
               </div>
             </MagneticButton>
           </div>
@@ -126,7 +126,7 @@ export default function Hero({
               className="flex items-center gap-3 px-6 py-3 border border-white/5 bg-transparent hover:bg-white/5 rounded-full transition-all text-[11px] uppercase font-mono tracking-[0.25em] text-white/70 hover:text-white"
               href="#contact"
             >
-              <Mail className="h-3.5 w-3.5 text-white/60" />
+              <EnvelopeSimple className="h-3.5 w-3.5 text-white/60" weight="duotone" />
               <span>{ui.hero.ctaSecondary}</span>
             </MagneticButton>
           </div>
@@ -135,13 +135,13 @@ export default function Hero({
         {/* Technical Highlights */}
         <div className="flex flex-wrap gap-3 text-[10px] uppercase font-mono tracking-[0.25em] text-white/40 mt-6">
           {data.hero.highlights.map((item, index) => {
-            const Icon = index === 0 ? Terminal : index === 1 ? Cpu : MapPin;
+            const Icon = index === 0 ? TerminalWindow : index === 1 ? Cpu : MapPinLine;
             return (
               <span
                 key={item}
                 className="hero-highlight inline-flex items-center gap-2 rounded-full border border-white/5 bg-[#0a0a0c]/40 backdrop-blur-md px-4 py-2 opacity-0"
               >
-                <Icon className="h-3 w-3 text-white/50" />
+                <Icon className="h-3 w-3 text-white/50" weight="duotone" />
                 <span>{item}</span>
               </span>
             );
@@ -156,7 +156,7 @@ export default function Hero({
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         >
-          <ArrowDown className="h-3 w-3 text-white/40" />
+          <CaretDown className="h-3 w-3 text-white/40" weight="light" />
         </motion.div>
       </div>
 

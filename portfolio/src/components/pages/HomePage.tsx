@@ -17,7 +17,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useVisualMode } from "@/components/providers/VisualModeProvider";
 import { uiText } from "@/lib/i18n";
 import { localizePortfolio } from "@/lib/portfolioLocale";
-import { FileText, Menu, X, ArrowUpRight } from "lucide-react";
+import { FileText, List, X, ArrowUpRight } from "@phosphor-icons/react";
 import { Github, Linkedin } from "@/components/icons/BrandIcons";
 
 import { ImmersiveSceneBridge } from "@/components/three/immersive/ImmersiveSceneBridge";
@@ -244,7 +244,7 @@ export default function HomePage() {
                     className="inline-flex items-center gap-1 px-3 py-1 text-[9px] uppercase font-mono tracking-[0.2em] text-white/80 bg-white/5 border border-white/10 rounded-full transition hover:bg-white/10 hover:border-white/20"
                     aria-label="Download CV"
                   >
-                    <FileText className="h-3 w-3" />
+                    <FileText className="h-3 w-3" weight="light" />
                     <span>CV</span>
                   </a>
                 )}
@@ -272,7 +272,7 @@ export default function HomePage() {
                   className="p-1.5 text-white/80 hover:text-white transition-colors"
                   aria-label="Toggle Menu"
                 >
-                  {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+                  {mobileMenuOpen ? <X className="h-4 w-4" weight="light" /> : <List className="h-4 w-4" weight="light" />}
                 </button>
               </div>
             </motion.div>
@@ -300,7 +300,7 @@ export default function HomePage() {
                       transition={{ delay: idx * 0.08, duration: 0.5 }}
                     >
                       <span>{item.label}</span>
-                      <ArrowUpRight className="h-5 w-5 text-white/40" />
+                      <ArrowUpRight className="h-5 w-5 text-white/40" weight="light" />
                     </motion.a>
                   ))}
                 </nav>
@@ -336,7 +336,7 @@ export default function HomePage() {
                       rel="noreferrer"
                       className="inline-flex justify-center items-center gap-2 py-3 text-xs uppercase font-mono tracking-widest text-white bg-white/5 border border-white/10 rounded-full"
                     >
-                      <FileText className="h-4 w-4" />
+                      <FileText className="h-4 w-4" weight="light" />
                       <span>Download CV</span>
                     </a>
                   )}
