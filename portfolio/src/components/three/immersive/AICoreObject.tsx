@@ -10,94 +10,157 @@ interface AICoreProps {
   tier: GraphicsTier;
 }
 
-// Mathematically correct view-space Fresnel shader
-const FRESNEL_VERTEX_SHADER = `
+// Advanced Holo-Fresnel Shader with Chromatic Dispersion & Neural Pulse
+const HOLO_FRESNEL_VERTEX_SHADER = `
   varying vec3 vNormal;
   varying vec3 vViewPosition;
+  varying vec3 vWorldPosition;
   uniform float uTime;
-  uniform float uDisplacement;
+  uniform float uPulse;
 
   void main() {
     vNormal = normalize(normalMatrix * normal);
     
-    // Controlled geometric vertex breath
-    vec3 pos = position + normal * (sin(position.y * 3.5 + uTime * 1.4) * (0.025 + uDisplacement * 0.035));
-    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    // Multi-frequency topological breathing
+    float wave = sin(position.y * 4.0 + uTime * 1.8) * cos(position.x * 3.5 + uTime * 1.2);
+    vec3 displaced = position + normal * (wave * (0.035 + uPulse * 0.04));
     
+    vec4 worldPos = modelMatrix * vec4(displaced, 1.0);
+    vWorldPosition = worldPos.xyz;
+    
+    vec4 mvPosition = viewMatrix * worldPos;
     vViewPosition = -mvPosition.xyz;
     gl_Position = projectionMatrix * mvPosition;
   }
 `;
 
-const FRESNEL_FRAGMENT_SHADER = `
+const HOLO_FRESNEL_FRAGMENT_SHADER = `
   varying vec3 vNormal;
   varying vec3 vViewPosition;
-  uniform vec3 uFresnelColor;
-  uniform vec3 uBaseColor;
+  varying vec3 vWorldPosition;
+  uniform vec3 uColorA;
+  uniform vec3 uColorB;
+  uniform vec3 uColorC;
+  uniform float uTime;
   uniform float uIntensity;
 
   void main() {
     vec3 normal = normalize(vNormal);
     vec3 viewDir = normalize(vViewPosition);
     
-    // View-space Fresnel computation
-    float fresnel = pow(1.0 - max(0.0, dot(viewDir, normal)), 2.5);
-    vec3 color = mix(uBaseColor, uFresnelColor, fresnel * uIntensity);
+    // Two-stage refractive fresnel curve
+    float fresnel = pow(1.0 - max(0.0, dot(viewDir, normal)), 2.8);
+    float innerGlow = pow(1.0 - max(0.0, dot(viewDir, normal)), 1.2);
     
-    gl_FragColor = vec4(color, 0.7 + fresnel * 0.3);
+    // Dynamic spectral chromatic gradient
+    float colorPhase = sin(vWorldPosition.y * 1.5 + uTime * 0.6) * 0.5 + 0.5;
+    vec3 baseGradient = mix(uColorA, uColorB, colorPhase);
+    vec3 spectralRim = mix(baseGradient, uColorC, fresnel);
+    
+    vec3 finalColor = spectralRim * (innerGlow * 0.6 + fresnel * 1.4 * uIntensity);
+    float alpha = clamp(0.18 + fresnel * 0.72, 0.0, 0.95);
+    
+    gl_FragColor = vec4(finalColor, alpha);
   }
 `;
 
 export function AICoreObject({ tier }: AICoreProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const outerMeshRef = useRef<THREE.Mesh>(null);
-  const cageMeshRef = useRef<THREE.Mesh>(null);
-  const innerCoreRef = useRef<THREE.Mesh>(null);
-  const ring1Ref = useRef<THREE.Mesh>(null);
-  const ring2Ref = useRef<THREE.Mesh>(null);
-  const ring3Ref = useRef<THREE.Mesh>(null);
-  const satellitesGroupRef = useRef<THREE.Group>(null);
+  const coreMeshRef = useRef<THREE.Mesh>(null);
+  const nucleusRef = useRef<THREE.Mesh>(null);
+  const plexusPointsRef = useRef<THREE.Points>(null);
+  const plexusLinesRef = useRef<THREE.LineSegments>(null);
+  const equatorialRingRef = useRef<THREE.Mesh>(null);
+  const polarRingRef = useRef<THREE.Mesh>(null);
+  const gyroRingRef = useRef<THREE.Mesh>(null);
+  const shardsGroupRef = useRef<THREE.Group>(null);
 
-  // Performance-adjusted geometry detail
-  const detail = tier === "full" ? 2 : 1;
+  // Performance-based complexity scaling
+  const nodeCount = tier === "full" ? 42 : 22;
+  const shardCount = tier === "full" ? 12 : 6;
 
-  const uniforms = useMemo(
+  // Shader Uniforms
+  const holoUniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uDisplacement: { value: 0 },
-      uFresnelColor: { value: new THREE.Color("#14b8a6") },
-      uBaseColor: { value: new THREE.Color("#03070b") },
-      uIntensity: { value: 1.35 },
+      uPulse: { value: 0 },
+      uColorA: { value: new THREE.Color("#042f2e") }, // Obsidian Teal
+      uColorB: { value: new THREE.Color("#0ea5e9") }, // Cyber Cyan
+      uColorC: { value: new THREE.Color("#a855f7") }, // Quantum Violet
+      uIntensity: { value: 1.5 },
     }),
     []
   );
 
-  // Procedural satellite orbital parameters
-  const satellites = useMemo(() => {
-    const items = [];
-    const count = tier === "full" ? 8 : 4;
-    for (let i = 0; i < count; i++) {
-      const angle = (i / count) * Math.PI * 2;
-      const radius = 2.3 + (i % 3) * 0.35;
-      const speed = 0.8 + (i % 2) * 0.4;
-      const inclination = ((i % 4) - 1.5) * 0.4;
-      items.push({ angle, radius, speed, inclination, color: i % 2 === 0 ? "#2dd4bf" : "#38bdf8" });
-    }
-    return items;
-  }, [tier]);
+  // 1. Synaptic Plexus: 3D Fibonacci Lattice Nodes and Synaptic Connections
+  const { nodePositions, linePositions } = useMemo(() => {
+    const positions: number[] = [];
+    const phi = Math.PI * (3 - Math.sqrt(5)); // Golden angle
 
+    for (let i = 0; i < nodeCount; i++) {
+      const y = 1 - (i / (nodeCount - 1)) * 2; // y goes from 1 to -1
+      const radius = Math.sqrt(1 - y * y);
+      const theta = phi * i;
+
+      const sphereR = 1.45 + (i % 3) * 0.08;
+      const x = Math.cos(theta) * radius * sphereR;
+      const z = Math.sin(theta) * radius * sphereR;
+      const py = y * sphereR;
+
+      positions.push(x, py, z);
+    }
+
+    // Connect nodes within proximity threshold to form neural synapses
+    const lines: number[] = [];
+    const maxDist = tier === "full" ? 0.95 : 1.15;
+
+    for (let i = 0; i < nodeCount; i++) {
+      const x1 = positions[i * 3];
+      const y1 = positions[i * 3 + 1];
+      const z1 = positions[i * 3 + 2];
+
+      for (let j = i + 1; j < nodeCount; j++) {
+        const x2 = positions[j * 3];
+        const y2 = positions[j * 3 + 1];
+        const z2 = positions[j * 3 + 2];
+
+        const dist = Math.hypot(x2 - x1, y2 - y1, z2 - z1);
+        if (dist < maxDist) {
+          lines.push(x1, y1, z1, x2, y2, z2);
+        }
+      }
+    }
+
+    return {
+      nodePositions: new Float32Array(positions),
+      linePositions: new Float32Array(lines),
+    };
+  }, [nodeCount, tier]);
+
+  // 2. Quantum Tensor Shards: Orbiting polyhedrons
+  const shards = useMemo(() => {
+    const list = [];
+    for (let i = 0; i < shardCount; i++) {
+      const angle = (i / shardCount) * Math.PI * 2;
+      const radius = 2.1 + (i % 3) * 0.35;
+      const speed = 0.6 + (i % 2) * 0.5;
+      const inclination = ((i % 4) - 1.5) * 0.5;
+      const scale = 0.06 + (i % 3) * 0.035;
+      const color = i % 3 === 0 ? "#2dd4bf" : i % 3 === 1 ? "#38bdf8" : "#c084fc";
+      list.push({ angle, radius, speed, inclination, scale, color });
+    }
+    return list;
+  }, [shardCount]);
+
+  // Dynamic frame loop with section morphing & pointer reactions
   useFrame((state, delta) => {
     const group = groupRef.current;
-    if (!group) return;
-
-    if (tier === "static") return;
+    if (!group || tier === "static") return;
 
     const t = state.clock.getElapsedTime();
-    const mesh = outerMeshRef.current;
-    if (mesh && mesh.material && "uniforms" in mesh.material) {
-      const mat = mesh.material as THREE.ShaderMaterial;
-      mat.uniforms.uTime.value = t;
-    }
+
+    // Update shader uniforms
+    holoUniforms.uTime.value = t;
 
     // Smooth pointer damping
     const ptr = sceneState.pointer;
@@ -110,74 +173,74 @@ export function AICoreObject({ tier }: AICoreProps) {
     const velocity = sceneState.scrollVelocity;
     const projectIdx = sceneState.activeProjectIndex;
 
-    // Continuous parameter morphing across sections
+    // Target spatial parameters per section
     let targetX = 1.7;
     let targetY = 0.0;
     let targetZ = 0.0;
     let targetScale = 1.15;
     let shellSeparation = 0.0;
     let ringTension = 0.0;
-    let pulseRate = 2.4;
+    let pulseSpeed = 2.5;
 
     switch (activeSec) {
       case "hero":
         targetX = 1.7;
         targetY = 0.0;
         targetZ = 0.0;
-        targetScale = 1.18;
+        targetScale = 1.2;
         shellSeparation = 0.0;
         ringTension = 0.0;
-        pulseRate = 2.4;
+        pulseSpeed = 2.4;
         break;
 
       case "about":
-        targetX = 2.2;
-        targetY = 0.35;
+        targetX = 2.15;
+        targetY = 0.3;
         targetZ = -1.2;
         targetScale = 1.28;
-        shellSeparation = 0.28;
-        ringTension = 0.35;
-        pulseRate = 2.8;
+        shellSeparation = 0.32;
+        ringTension = 0.4;
+        pulseSpeed = 2.8;
         break;
 
       case "experience":
-        targetX = -1.9;
+        targetX = -1.85;
         targetY = -0.2;
-        targetZ = -2.2;
-        targetScale = 0.95;
-        shellSeparation = 0.15;
-        ringTension = 0.7;
-        pulseRate = 2.2;
+        targetZ = -2.0;
+        targetScale = 0.98;
+        shellSeparation = 0.18;
+        ringTension = 0.75;
+        pulseSpeed = 2.2;
         break;
 
       case "projects":
-        targetX = 0.0 + (projectIdx - 1) * 0.35;
+        targetX = 0.0 + (projectIdx - 1) * 0.4;
         targetY = -0.55;
-        targetZ = -3.4;
-        targetScale = 0.88;
-        shellSeparation = 0.08;
+        targetZ = -3.2;
+        targetScale = 0.92;
+        shellSeparation = 0.12;
         ringTension = 0.95;
-        pulseRate = 1.8;
+        pulseSpeed = 1.9;
         break;
 
       case "skills":
-        targetX = 1.8;
-        targetY = -0.25;
-        targetZ = -1.6;
-        targetScale = 1.05;
-        shellSeparation = 0.38;
-        ringTension = 0.5;
-        pulseRate = 3.0;
+        targetX = 1.85;
+        targetY = -0.2;
+        targetZ = -1.5;
+        targetScale = 1.08;
+        shellSeparation = 0.42;
+        ringTension = 0.55;
+        pulseSpeed = 3.2;
         break;
 
       case "contact":
         targetX = 0.0;
         targetY = 0.15;
-        targetZ = -1.2;
-        targetScale = 1.0;
-        shellSeparation = 0.0;
-        ringTension = 0.1;
-        pulseRate = 1.6;
+        targetZ = -1.1;
+        targetScale = 1.05;
+        shellSeparation = 0.05;
+        ringTension = 0.15;
+        pulseSpeed = 1.6;
         break;
     }
 
@@ -185,7 +248,7 @@ export function AICoreObject({ tier }: AICoreProps) {
     targetX += ptr.x * 0.35;
     targetY += ptr.y * 0.25;
 
-    // Damp position & scale
+    // Smooth position & scale damping
     group.position.x = THREE.MathUtils.damp(group.position.x, targetX, 3.2, delta);
     group.position.y = THREE.MathUtils.damp(group.position.y, targetY, 3.2, delta);
     group.position.z = THREE.MathUtils.damp(group.position.z, targetZ, 3.2, delta);
@@ -193,71 +256,74 @@ export function AICoreObject({ tier }: AICoreProps) {
     const currentScale = THREE.MathUtils.damp(group.scale.x, targetScale, 3.0, delta);
     group.scale.set(currentScale, currentScale, currentScale);
 
-    // Shell separation morphing
-    if (outerMeshRef.current) {
-      const outerScale = THREE.MathUtils.damp(
-        outerMeshRef.current.scale.x,
+    // Continuous orbital rotation with scroll velocity injection
+    const spinRate = delta * (0.18 + Math.abs(velocity) * 0.00018);
+    group.rotation.y += spinRate;
+    group.rotation.x = THREE.MathUtils.damp(group.rotation.x, ptr.y * 0.22, 3, delta);
+    group.rotation.z = THREE.MathUtils.damp(group.rotation.z, -ptr.x * 0.16, 3, delta);
+
+    // Dynamic Nucleus Breathing & Chromatic Pulse
+    const pulseFactor = Math.sin(t * pulseSpeed) * 0.5 + 0.5;
+    holoUniforms.uPulse.value = pulseFactor;
+
+    if (nucleusRef.current) {
+      nucleusRef.current.rotation.x += delta * 0.45;
+      nucleusRef.current.rotation.y += delta * 0.65;
+      const nucScale = 1.0 + Math.sin(t * pulseSpeed * 1.5) * 0.08;
+      nucleusRef.current.scale.set(nucScale, nucScale, nucScale);
+    }
+
+    // Outer Shell Expansion (Morphing)
+    if (coreMeshRef.current) {
+      const shellScale = THREE.MathUtils.damp(
+        coreMeshRef.current.scale.x,
         1.0 + shellSeparation,
         3.0,
         delta
       );
-      outerMeshRef.current.scale.set(outerScale, outerScale, outerScale);
-    }
-    if (cageMeshRef.current) {
-      const cageScale = THREE.MathUtils.damp(
-        cageMeshRef.current.scale.x,
-        1.0 + shellSeparation * 1.18,
-        3.0,
-        delta
-      );
-      cageMeshRef.current.scale.set(cageScale, cageScale, cageScale);
+      coreMeshRef.current.scale.set(shellScale, shellScale, shellScale);
     }
 
-    // Gyroscopic rotations
-    group.rotation.y += delta * 0.16 + Math.abs(velocity) * 0.00018;
-    group.rotation.x = THREE.MathUtils.damp(group.rotation.x, ptr.y * 0.18, 3, delta);
-    group.rotation.z = THREE.MathUtils.damp(group.rotation.z, -ptr.x * 0.12, 3, delta);
-
-    // 3 Concentric Gimbal Rings
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.x += delta * (0.32 - ringTension * 0.15);
-      ring1Ref.current.rotation.y += delta * (0.22 + ringTension * 0.1);
-      const r1 = THREE.MathUtils.damp(ring1Ref.current.scale.z, 1.0 - ringTension * 0.5, 3.0, delta);
-      ring1Ref.current.scale.set(1, 1, r1);
+    // Synaptic Plexus Sparkle & Rotation
+    if (plexusPointsRef.current) {
+      plexusPointsRef.current.rotation.y -= delta * 0.12;
+      plexusPointsRef.current.rotation.z += delta * 0.08;
     }
-    if (ring2Ref.current) {
-      ring2Ref.current.rotation.y -= delta * (0.36 - ringTension * 0.15);
-      ring2Ref.current.rotation.z += delta * (0.24 + ringTension * 0.08);
-      const r2 = THREE.MathUtils.damp(ring2Ref.current.scale.x, 1.0 - ringTension * 0.4, 3.0, delta);
-      ring2Ref.current.scale.set(r2, 1, 1);
-    }
-    if (ring3Ref.current) {
-      ring3Ref.current.rotation.x += delta * 0.28;
-      ring3Ref.current.rotation.z -= delta * 0.32;
+    if (plexusLinesRef.current) {
+      plexusLinesRef.current.rotation.y -= delta * 0.12;
+      plexusLinesRef.current.rotation.z += delta * 0.08;
     }
 
-    // Inner core pulse
-    if (innerCoreRef.current) {
-      const pulse = 1.0 + Math.sin(t * pulseRate) * (0.05 + shellSeparation * 0.04);
-      innerCoreRef.current.scale.set(pulse, pulse, pulse);
+    // Tri-Axial Astrolabe Counter-Rotations
+    if (equatorialRingRef.current) {
+      equatorialRingRef.current.rotation.z += delta * (0.45 + ringTension * 0.3);
+      equatorialRingRef.current.rotation.x = Math.sin(t * 0.8) * 0.12;
+    }
+    if (polarRingRef.current) {
+      polarRingRef.current.rotation.x -= delta * (0.38 + ringTension * 0.2);
+      polarRingRef.current.rotation.y += delta * 0.25;
+    }
+    if (gyroRingRef.current) {
+      gyroRingRef.current.rotation.y += delta * 0.32;
+      gyroRingRef.current.rotation.z -= delta * 0.28;
     }
 
-    // Satellite orbital animations
-    if (satellitesGroupRef.current) {
-      satellitesGroupRef.current.rotation.y += delta * 0.4;
-      satellitesGroupRef.current.rotation.x += delta * 0.15;
+    // Shards Orbital Inertia
+    if (shardsGroupRef.current) {
+      shardsGroupRef.current.rotation.y += delta * 0.35;
+      shardsGroupRef.current.rotation.x += delta * 0.15;
     }
   });
 
   return (
     <group ref={groupRef} position={[1.7, 0, 0]}>
-      {/* Outer Faceted Geometric Shell */}
-      <mesh ref={outerMeshRef}>
-        <icosahedronGeometry args={[1.35, detail]} />
+      {/* 1. Hyperdimensional Faceted Crystalline Shell */}
+      <mesh ref={coreMeshRef}>
+        <dodecahedronGeometry args={[1.32, 0]} />
         <shaderMaterial
-          uniforms={uniforms}
-          vertexShader={FRESNEL_VERTEX_SHADER}
-          fragmentShader={FRESNEL_FRAGMENT_SHADER}
+          uniforms={holoUniforms}
+          vertexShader={HOLO_FRESNEL_VERTEX_SHADER}
+          fragmentShader={HOLO_FRESNEL_FRAGMENT_SHADER}
           transparent
           wireframe={tier !== "full"}
           side={THREE.DoubleSide}
@@ -265,64 +331,116 @@ export function AICoreObject({ tier }: AICoreProps) {
         />
       </mesh>
 
-      {/* Outer Wireframe Cage Layer */}
-      <mesh ref={cageMeshRef}>
-        <icosahedronGeometry args={[1.38, detail]} />
+      {/* 2. Inner Quantum Torus Knot Nucleus */}
+      <mesh ref={nucleusRef}>
+        <torusKnotGeometry args={[0.42, 0.085, 48, 12, 2, 3]} />
+        <meshStandardMaterial
+          color="#0f766e"
+          emissive="#2dd4bf"
+          emissiveIntensity={tier === "full" ? 1.6 : 1.0}
+          roughness={0.15}
+          metalness={0.88}
+          wireframe={tier !== "full"}
+        />
+      </mesh>
+
+      {/* 3. Interactive Synaptic Plexus (Neural Graph) */}
+      <group>
+        {/* Nodes (Synaptic Points) */}
+        <points ref={plexusPointsRef}>
+          <bufferGeometry>
+            <bufferAttribute
+              attach="attributes-position"
+              args={[nodePositions, 3]}
+            />
+          </bufferGeometry>
+          <pointsMaterial
+            size={tier === "full" ? 0.055 : 0.04}
+            color="#38bdf8"
+            transparent
+            opacity={0.85}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </points>
+
+        {/* Filaments (Synaptic Electrical Lines) */}
+        <lineSegments ref={plexusLinesRef}>
+          <bufferGeometry>
+            <bufferAttribute
+              attach="attributes-position"
+              args={[linePositions, 3]}
+            />
+          </bufferGeometry>
+          <lineBasicMaterial
+            color="#14b8a6"
+            transparent
+            opacity={tier === "full" ? 0.32 : 0.18}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </lineSegments>
+      </group>
+
+      {/* 4. Tri-Axial Segmented Astrolabe Rings */}
+      {/* Equatorial Astrolabe Ring */}
+      <mesh ref={equatorialRingRef}>
+        <torusGeometry args={[1.92, 0.012, 8, 48]} />
         <meshBasicMaterial
           color="#2dd4bf"
-          wireframe
           transparent
-          opacity={tier === "full" ? 0.22 : 0.12}
+          opacity={0.45}
           depthWrite={false}
         />
       </mesh>
 
-      {/* Multi-Axis Gimbal Ring 1 */}
-      <mesh ref={ring1Ref}>
-        <torusGeometry args={[1.85, 0.012, 12, 48]} />
-        <meshBasicMaterial color="#14b8a6" transparent opacity={0.35} depthWrite={false} />
+      {/* Polar Inclination Ring (45 degree golden tilt) */}
+      <mesh ref={polarRingRef} rotation={[Math.PI / 4, Math.PI / 6, 0]}>
+        <torusGeometry args={[2.18, 0.009, 8, 48]} />
+        <meshBasicMaterial
+          color="#38bdf8"
+          transparent
+          opacity={0.35}
+          depthWrite={false}
+        />
       </mesh>
 
-      {/* Multi-Axis Gimbal Ring 2 */}
-      <mesh ref={ring2Ref} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[2.1, 0.009, 12, 48]} />
-        <meshBasicMaterial color="#0ea5e9" transparent opacity={0.25} depthWrite={false} />
+      {/* Outer Gyroscopic Telemetry Ring */}
+      <mesh ref={gyroRingRef} rotation={[-Math.PI / 3, 0, Math.PI / 4]}>
+        <torusGeometry args={[2.42, 0.007, 8, 48]} />
+        <meshBasicMaterial
+          color="#a855f7"
+          transparent
+          opacity={0.28}
+          depthWrite={false}
+        />
       </mesh>
 
-      {/* Multi-Axis Gimbal Ring 3 */}
-      <mesh ref={ring3Ref} rotation={[0, Math.PI / 4, Math.PI / 3]}>
-        <torusGeometry args={[2.35, 0.007, 12, 48]} />
-        <meshBasicMaterial color="#2dd4bf" transparent opacity={0.18} depthWrite={false} />
-      </mesh>
-
-      {/* Satellite Quantum Data Nodes */}
-      <group ref={satellitesGroupRef}>
-        {satellites.map((sat, i) => (
+      {/* 5. Floating Cosmic Tensor Shards */}
+      <group ref={shardsGroupRef}>
+        {shards.map((shard, i) => (
           <mesh
             key={i}
             position={[
-              Math.cos(sat.angle) * sat.radius,
-              Math.sin(sat.angle * 2) * sat.inclination,
-              Math.sin(sat.angle) * sat.radius,
+              Math.cos(shard.angle) * shard.radius,
+              Math.sin(shard.angle * 2) * shard.inclination,
+              Math.sin(shard.angle) * shard.radius,
             ]}
+            rotation={[shard.angle, shard.angle * 1.5, 0]}
           >
-            <sphereGeometry args={[0.045, 12, 12]} />
-            <meshBasicMaterial color={sat.color} transparent opacity={0.8} />
+            <octahedronGeometry args={[shard.scale, 0]} />
+            <meshStandardMaterial
+              color={shard.color}
+              emissive={shard.color}
+              emissiveIntensity={0.8}
+              roughness={0.2}
+              metalness={0.8}
+              transparent
+              opacity={0.85}
+            />
           </mesh>
         ))}
       </group>
-
-      {/* Inner Glowing Intelligence Core */}
-      <mesh ref={innerCoreRef}>
-        <sphereGeometry args={[0.55, 24, 24]} />
-        <meshStandardMaterial
-          color="#0f766e"
-          emissive="#14b8a6"
-          emissiveIntensity={0.75}
-          roughness={0.18}
-          metalness={0.85}
-        />
-      </mesh>
     </group>
   );
 }

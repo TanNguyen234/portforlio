@@ -22,6 +22,7 @@ const GLOW_FRAGMENT_SHADER = `
   varying vec2 vUv;
   uniform vec3 uColorA;
   uniform vec3 uColorB;
+  uniform vec3 uColorC;
   uniform float uTime;
   uniform vec2 uCorePos;
   uniform float uIntensity;
@@ -31,14 +32,16 @@ const GLOW_FRAGMENT_SHADER = `
     vec2 center = vec2(0.5) + uCorePos * 0.08;
     float dist = distance(vUv, center);
     
-    // Soft organic pulse
-    float pulse = sin(uTime * 0.8) * 0.05 + 1.0;
-    float glow = exp(-dist * 3.2 / pulse) * uIntensity;
+    // Soft organic breathing pulse
+    float pulse = sin(uTime * 0.7) * 0.06 + 1.0;
+    float glow = exp(-dist * 2.8 / pulse) * uIntensity;
     
-    // Smooth dual-color gradient
-    vec3 color = mix(uColorA, uColorB, vUv.x + sin(uTime * 0.4) * 0.15);
+    // Cosmic triple chromatic gradient
+    float wave = sin(vUv.x * 2.0 + uTime * 0.3) * 0.5 + 0.5;
+    vec3 gradient = mix(uColorA, uColorB, wave);
+    vec3 color = mix(gradient, uColorC, vUv.y * 0.7 + sin(uTime * 0.2) * 0.15);
     
-    gl_FragColor = vec4(color, glow * 0.42);
+    gl_FragColor = vec4(color, glow * 0.48);
   }
 `;
 
@@ -49,9 +52,10 @@ export function AmbientFieldGlow({ tier }: AmbientGlowProps) {
     () => ({
       uTime: { value: 0 },
       uCorePos: { value: new THREE.Vector2(0.5, 0) },
-      uColorA: { value: new THREE.Color("#042f2e") }, // Deep teal
-      uColorB: { value: new THREE.Color("#082f49") }, // Deep ocean cyan/indigo
-      uIntensity: { value: tier === "full" ? 0.75 : 0.5 },
+      uColorA: { value: new THREE.Color("#032b28") }, // Deep Emerald Obsidian
+      uColorB: { value: new THREE.Color("#071f38") }, // Deep Cyber Midnight
+      uColorC: { value: new THREE.Color("#1a0933") }, // Quantum Deep Violet
+      uIntensity: { value: tier === "full" ? 0.85 : 0.55 },
     }),
     [tier]
   );
