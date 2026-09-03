@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Menu, X, ArrowUpRight } from "lucide-react";
+import { FileText, List, X, ArrowUpRight } from "@phosphor-icons/react";
 import { Github, Linkedin } from "@/components/icons/BrandIcons";
 
 interface HeaderImmersiveProps {
@@ -99,7 +99,7 @@ export function HeaderImmersive({
                 className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] uppercase font-mono tracking-[0.2em] text-white/90 bg-white/5 border border-white/15 hover:border-teal-400/40 hover:bg-teal-500/10 transition-all focus-ring-immersive rounded-sm"
                 aria-label="Download Curriculum Vitae"
               >
-                <FileText className="h-3 w-3 text-teal-400" />
+                <FileText className="h-3.5 w-3.5 text-teal-400" weight="light" />
                 <span>CV</span>
               </a>
             )}
@@ -129,7 +129,7 @@ export function HeaderImmersive({
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileMenuOpen ? <X className="h-5 w-5" weight="light" /> : <List className="h-5 w-5" weight="light" />}
             </button>
           </div>
         </div>
@@ -161,7 +161,7 @@ export function HeaderImmersive({
                       </span>
                       <span>{item.label}</span>
                     </div>
-                    <ArrowUpRight className="h-4 w-4 text-white/40" />
+                    <ArrowUpRight className="h-4 w-4 text-white/40" weight="light" />
                   </a>
                 );
               })}
@@ -198,7 +198,7 @@ export function HeaderImmersive({
                   rel="noreferrer"
                   className="inline-flex justify-center items-center gap-2 py-3 text-xs uppercase font-mono tracking-widest text-white bg-white/5 border border-white/15 rounded-sm"
                 >
-                  <FileText className="h-4 w-4 text-teal-400" />
+                  <FileText className="h-4 w-4 text-teal-400" weight="light" />
                   <span>Download CV</span>
                 </a>
               )}

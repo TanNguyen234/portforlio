@@ -1,6 +1,6 @@
 "use client";
 
-import { GraduationCap, BookOpen, Calendar } from "lucide-react";
+import { GraduationCap, BookOpen, CalendarBlank } from "@phosphor-icons/react";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -36,7 +36,7 @@ export function AboutImmersive({ data, ui }: AboutImmersiveProps) {
         {/* Right Column: Technical Education Dossier (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-8 lg:border-l lg:border-white/10 lg:pl-10">
           <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-            <GraduationCap className="h-5 w-5 text-teal-400" />
+            <GraduationCap className="h-5 w-5 text-teal-400" weight="duotone" />
             <span className="text-[11px] font-mono tracking-[0.25em] uppercase text-white/80 font-medium">
               {ui.sections.about.educationLabel}
             </span>
@@ -51,7 +51,7 @@ export function AboutImmersive({ data, ui }: AboutImmersiveProps) {
             </div>
 
             <div className="flex items-start gap-3">
-              <BookOpen className="h-4 w-4 text-white/40 mt-1 shrink-0" />
+              <BookOpen className="h-4 w-4 text-white/40 mt-1 shrink-0" weight="duotone" />
               <div>
                 <p className="text-[10px] font-mono tracking-widest text-white/40 uppercase">Degree & Field</p>
                 <p className="text-sm font-light text-white/80 mt-0.5">
@@ -61,7 +61,7 @@ export function AboutImmersive({ data, ui }: AboutImmersiveProps) {
             </div>
 
             <div className="flex items-start gap-3">
-              <Calendar className="h-4 w-4 text-white/40 mt-1 shrink-0" />
+              <CalendarBlank className="h-4 w-4 text-white/40 mt-1 shrink-0" weight="light" />
               <div>
                 <p className="text-[10px] font-mono tracking-widest text-white/40 uppercase">Timeline</p>
                 <p className="text-sm font-light text-white/80 mt-0.5">

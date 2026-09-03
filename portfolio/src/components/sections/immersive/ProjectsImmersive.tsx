@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronRight, X, ArrowUpRight, Eye } from "lucide-react";
+import { CaretRight, X, ArrowUpRight, Eye } from "@phosphor-icons/react";
 import { Github } from "@/components/icons/BrandIcons";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
@@ -106,10 +106,10 @@ export function ProjectsImmersive({ data, ui }: ProjectsImmersiveProps) {
                 <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
                   <span className="inline-flex items-center gap-2 text-xs font-mono tracking-[0.2em] uppercase text-white/70 group-hover:text-teal-300 transition-colors">
                     <span>{ui.projects.caseStudy}</span>
-                    <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                    <CaretRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" weight="light" />
                   </span>
                   <div className="h-8 w-8 border border-white/15 flex items-center justify-center group-hover:border-teal-400/40 group-hover:bg-teal-500/10 transition-colors">
-                    <ArrowUpRight className="h-4 w-4 text-white/70 group-hover:text-teal-300 transition-colors" />
+                    <ArrowUpRight className="h-4 w-4 text-white/70 group-hover:text-teal-300 transition-colors" weight="light" />
                   </div>
                 </div>
               </div>
@@ -158,7 +158,7 @@ export function ProjectsImmersive({ data, ui }: ProjectsImmersiveProps) {
                   type="button"
                   aria-label="Close case study drawer"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-4 w-4" weight="light" />
                 </button>
               </div>
 
@@ -225,7 +225,7 @@ export function ProjectsImmersive({ data, ui }: ProjectsImmersiveProps) {
                     rel="noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 py-3 bg-teal-500 hover:bg-teal-400 text-black font-semibold transition-all text-xs font-mono tracking-widest uppercase focus-ring-immersive rounded-sm shadow-[0_0_16px_rgba(20,184,166,0.3)]"
                   >
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-4 w-4" weight="light" />
                     <span>{ui.projects.visitDemo}</span>
                   </a>
                 )}

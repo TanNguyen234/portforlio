@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Phone, MapPin, Download, ArrowUpRight } from "lucide-react";
+import { EnvelopeSimple, PhoneCall, MapPinLine, DownloadSimple, ArrowUpRight } from "@phosphor-icons/react";
 import { Github, Linkedin } from "@/components/icons/BrandIcons";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
@@ -35,7 +35,7 @@ export function ContactImmersive({ data, ui }: ContactImmersiveProps) {
               {/* Location */}
               <div className="flex flex-col gap-1.5">
                 <span className="text-[10px] font-mono tracking-widest uppercase text-teal-400/80 flex items-center gap-2">
-                  <MapPin className="h-3.5 w-3.5" />
+                  <MapPinLine className="h-3.5 w-3.5" weight="duotone" />
                   <span>Location</span>
                 </span>
                 <span className="text-sm font-light text-white">
@@ -46,7 +46,7 @@ export function ContactImmersive({ data, ui }: ContactImmersiveProps) {
               {/* Email */}
               <div className="flex flex-col gap-1.5">
                 <span className="text-[10px] font-mono tracking-widest uppercase text-teal-400/80 flex items-center gap-2">
-                  <Mail className="h-3.5 w-3.5" />
+                  <EnvelopeSimple className="h-3.5 w-3.5" weight="duotone" />
                   <span>Email</span>
                 </span>
                 <a
@@ -60,7 +60,7 @@ export function ContactImmersive({ data, ui }: ContactImmersiveProps) {
               {/* Phone */}
               <div className="flex flex-col gap-1.5">
                 <span className="text-[10px] font-mono tracking-widest uppercase text-teal-400/80 flex items-center gap-2">
-                  <Phone className="h-3.5 w-3.5" />
+                  <PhoneCall className="h-3.5 w-3.5" weight="duotone" />
                   <span>Phone</span>
                 </span>
                 <span className="text-sm font-light text-white">
@@ -83,7 +83,7 @@ export function ContactImmersive({ data, ui }: ContactImmersiveProps) {
                   >
                     <Github className="h-3.5 w-3.5" />
                     <span>GitHub</span>
-                    <ArrowUpRight className="h-3 w-3 opacity-60" />
+                    <ArrowUpRight className="h-3 w-3 opacity-60" weight="light" />
                   </a>
                   {data.contact.linkedin && (
                     <a
@@ -95,7 +95,7 @@ export function ContactImmersive({ data, ui }: ContactImmersiveProps) {
                     >
                       <Linkedin className="h-3.5 w-3.5" />
                       <span>LinkedIn</span>
-                      <ArrowUpRight className="h-3 w-3 opacity-60" />
+                      <ArrowUpRight className="h-3 w-3 opacity-60" weight="light" />
                     </a>
                   )}
                 </div>
@@ -109,7 +109,7 @@ export function ContactImmersive({ data, ui }: ContactImmersiveProps) {
               href={`mailto:${data.contact.email}`}
               className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-teal-500 hover:bg-teal-400 text-black font-mono text-xs uppercase tracking-[0.2em] font-semibold transition-all focus-ring-immersive rounded-sm shadow-[0_0_24px_rgba(20,184,166,0.3)]"
             >
-              <Mail className="h-4 w-4" />
+              <EnvelopeSimple className="h-4 w-4" weight="bold" />
               <span>Send Message</span>
             </a>
 
@@ -121,7 +121,7 @@ export function ContactImmersive({ data, ui }: ContactImmersiveProps) {
                 rel="noreferrer"
                 className="inline-flex items-center justify-center gap-3 px-8 py-4 border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 text-white font-mono text-xs uppercase tracking-[0.2em] transition-all focus-ring-immersive rounded-sm"
               >
-                <Download className="h-4 w-4 text-teal-400" />
+                <DownloadSimple className="h-4 w-4 text-teal-400" weight="light" />
                 <span>{ui.contact.cv}</span>
               </a>
             )}

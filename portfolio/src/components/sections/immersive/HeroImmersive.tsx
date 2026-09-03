@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight, ArrowDown } from "lucide-react";
+import { ArrowUpRight, CaretDown } from "@phosphor-icons/react";
 import type { PortfolioData } from "@/lib/portfolio";
 import type { UiText } from "@/lib/i18n";
 
@@ -48,7 +48,7 @@ export function HeroImmersive({ data, ui }: HeroImmersiveProps) {
                 className="group inline-flex items-center gap-3 px-7 py-3.5 bg-teal-500 hover:bg-teal-400 text-black font-mono text-xs uppercase tracking-[0.2em] font-semibold transition-all focus-ring-immersive rounded-sm shadow-[0_0_24px_rgba(20,184,166,0.3)]"
               >
                 <span>{ui.hero.ctaPrimary}</span>
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" weight="light" />
               </a>
               <a
                 href="#contact"
@@ -90,7 +90,7 @@ export function HeroImmersive({ data, ui }: HeroImmersiveProps) {
               animate={{ y: [0, 4, 0] }}
               transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
             >
-              <ArrowDown className="h-3 w-3 text-teal-400" />
+              <CaretDown className="h-3.5 w-3.5 text-teal-400" weight="light" />
             </motion.div>
           </div>
         </div>
