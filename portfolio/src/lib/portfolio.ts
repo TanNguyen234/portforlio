@@ -54,8 +54,8 @@ export const portfolio = {
   experience: [
     {
       period: "06/2026 - Present",
-      role: "AI / RAG Engineer (Project) - VietLex Legal RAG Platform",
-      roleVi: "Kỹ sư AI / RAG (Dự án) - Nền tảng RAG Pháp luật VietLex",
+      role: "AI / RAG Engineer (Project) - VietLex Legal RAG Platform (ProfessionalLegalRAG)",
+      roleVi: "Kỹ sư AI / RAG (Dự án) - Nền tảng RAG Pháp luật VietLex (ProfessionalLegalRAG)",
       summary:
         "Engineered an enterprise-grade Vietnamese legal RAG system operating over a 518,255 document corpus with deterministic evaluation and fail-closed safety.",
       summaryVi:
@@ -118,13 +118,13 @@ export const portfolio = {
   ],
   projects: [
     {
-      title: "VietLex — Enterprise Vietnamese Legal RAG",
-      titleVi: "VietLex — Hệ thống RAG Pháp luật Việt Nam",
+      title: "VietLex (ProfessionalLegalRAG) — Enterprise Vietnamese Legal RAG",
+      titleVi: "VietLex (ProfessionalLegalRAG) — Hệ thống RAG Pháp luật Việt Nam",
       period: "06/2026 - Present",
       description:
-        "Enterprise-grade Vietnamese legal RAG platform operating over 518,255 legal documents with hybrid retrieval (Vertex AI 1024d + BM25 + Qdrant RRF), deterministic evaluation, and NeMo guardrails.",
+        "Enterprise-grade Vietnamese legal RAG platform (ProfessionalLegalRAG) operating over 518,255 legal documents with hybrid retrieval (Vertex AI 1024d + BM25 + Qdrant RRF), deterministic evaluation, and NeMo guardrails.",
       descriptionVi:
-        "Nền tảng RAG pháp lý tiếng Việt cấp doanh nghiệp trên kho ngữ liệu 518.255 văn bản quy phạm pháp luật với truy xuất lai (Vertex AI 1024d + BM25 + Qdrant RRF), framework đánh giá tất định và NeMo guardrails.",
+        "Nền tảng RAG pháp lý tiếng Việt cấp doanh nghiệp (ProfessionalLegalRAG) trên kho ngữ liệu 518.255 văn bản quy phạm pháp luật với truy xuất lai (Vertex AI 1024d + BM25 + Qdrant RRF), framework đánh giá tất định và NeMo guardrails.",
       highlights: [
         "Hybrid retrieval over 518,255 legal documents via Qdrant v3 & Pinecone fallback",
         "Dense Vertex AI Gemini 1024d + Sparse BM25 with Reciprocal Rank Fusion (RRF)",
