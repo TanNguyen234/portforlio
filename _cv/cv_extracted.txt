@@ -1,37 +1,52 @@
 Nguyen Thanh Duy Tan
 AI Engineer Fresher
-Tan Binh District, Ho Chi Minh City | 0339900276 | tanntd.2005@gmail.com | github.com/TanNguyen234
-Career Objective
-Short-term:Join an AI Engineer Intern role, gain hands-on experience in NLP, Computer Vision, and foundational
-MLOps.
-Long-term:Become an AI Engineer specializing in NLP and Computer Vision, with the ability to build and deploy
-ML pipelines.
-Education
-Ho Chi Minh City University of Natural Resources and EnvironmentOct 2023 – Present
-Major: Information Technology GPA: 3.1/4.0
-Skills
-•Machine Learning:Scikit-learn, Pandas, NumPy, Imbalanced Data Handling, EDA.
-•Generative AI & NLP:LLMs, LangGraph, LangChain, Multi-Agent Systems, RAG.
-•MLOps & Software Engineering:FastAPI, Docker, CI/CD (GitHub Actions), Pytest, RESTful APIs.
-•Database & Storage:MongoDB (Motor Async).
-•Tools:Git, GitHub, Jupyter Notebook, Linux.
-•Soft Skills:Problem-solving, system design thinking, self-researching technical docs.
-Projects
-CV AI Evaluation System (Generative AI & LLM)03/2026 – Present
-•Full-stack, multi-agent AI system for automated resume parsing, profiling, and professional evaluation.
-•Designed a LangGraph workflow to run Foundational, Professional, and Project evaluation phases concurrently.
-•Integrated Tavily API (RAG) for market context and a Meta-Evaluator to check cross-agent logic consistency.
-•Built an async FastAPI backend with SSE progress streaming and Base64 CV storage in MongoDB.
-•Added a 5-requests/day rate limiter and AI Spam Validation to filter invalid files and reduce LLM API costs.
-Tech Stack:Python, FastAPI, LangGraph, LangChain, LLMs (Gemini, Qwen), SSE, MongoDB, PyMuPDF4LLM.
-GitHub:github.com/TanNguyen234/CV-Review-System
-End-to-End Fraud Detection Pipeline (Traditional ML & MLOps)05/2026 – Present
-•Production-ready machine learning service to detect credit card fraud with high accuracy.
-•Conducted EDA and trained an XGBoost classifier for a highly imbalanced dataset with only 0.17% fraud cases.
-•Packaged the model into a FastAPI app for single-transaction prediction and batch inference up to 100 transac-
-tions.
-•Containerized the app with Docker and built a GitHub Actions CI/CD pipeline for Ruff linting, testing, and
-image deployment.
-•Wrote unit and integration tests with Pytest, using Pydantic for strict API schema validation.
-Tech Stack:Python, XGBoost, Pandas, Scikit-learn, FastAPI, Docker, GitHub Actions, Pytest.
-GitHub:github.com/TanNguyen234/End-to-End-Fraud-Detection-Pipeline
+District 7, Ho Chi Minh City  |  +84 339 900 276  |  tanntd.2005@gmail.com
+github.com/TanNguyen234  |  linkedin.com/in/tannguyen234  |  nguyentan234.vercel.app
+PROFILE
+Early-career AI engineer and Information Technology student focused on applied AI systems, retrieval/evaluation, 
+and Python backend engineering. Built and deployed RAG, multi-agent LLM, and ML inference services with 
+reproducible evaluation, automated testing, Docker, and CI/CD.
+EDUCATION
+Ho Chi Minh City University of Natural Resources and 
+Environment
+Major: Information Technology  |  GPA: 3.0/4.0
+Oct 2023 - Present
+Ho Chi Minh City
+Academic Encouragement Scholarship, Academic Year 2024-2025
+TECHNICAL SKILLS
+Applied AI: RAG, LangGraph, LangChain, multi-agent workflows, hybrid retrieval, LLM evaluation
+Machine Learning: Scikit-learn, XGBoost, Pandas, NumPy, imbalanced classification, EDA
+Backend & MLOps: Python, FastAPI, REST APIs, SSE, Docker, Pytest, GitHub Actions
+Data & Cloud: Qdrant, MongoDB/Motor, SQLite/FTS5, Supabase, Google Vertex AI
+SELECTED PROJECTS
+VietLex - Vietnamese Legal RAG & Evidence Workflow
+07/2026 - Present
+GitHub | Live Demo
+• Built a Vietnamese legal RAG/research system backed by a pinned 518,255-document corpus; the current v3 
+runtime indexes 141,798 structural points across 14,962 audited documents using Vertex embeddings, Qdrant 
+dense-sparse retrieval, and fail-closed routing.
+• Built versioned Golden-50 retrieval/generation evaluation with evidence provenance and regression tracking; 
+the current v3 ranking uses RRF+DBSF, and the verified subset records 53/53 Document Recall@3.
+• Shipped citation-backed Q&A, legal-document search, research workspaces, source reading/OCR, report export, 
+and feedback/regression workflows; maintained 1,200+ automated tests plus scoped live verification.
+Stack: Python, FastAPI, Vertex AI, Qdrant, Supabase, SQLite/FTS5, MongoDB, NeMo Guardrails, Ragas, Pytest, Docker
+CV AI Evaluation System - Multi-Agent LLM Application
+03/2026 - 05/2026
+GitHub | Live Demo
+• Built a LangGraph pipeline for PDF extraction, candidate profiling, market enrichment, parallel fan-out across six 
+specialized evaluators, deterministic validation, optional JD analysis, and meta-evaluation.
+• Added configurable Gemini/Qwen providers with retry/backoff for transient LLM failures; served jobs through 
+async FastAPI, SSE progress streaming, and MongoDB/Motor persistence.
+• Implemented CV validation, per-IP limits, unit/integration tests, and Docker deployment on Hugging Face 
+Spaces.
+Stack: Python, FastAPI, LangGraph, LangChain, Gemini, Qwen, Tavily, MongoDB/Motor, PyMuPDF4LLM, Docker
+Fraud Detection API - ML Inference & CI/CD Pipeline
+05/2026 - 06/2026
+GitHub
+• Trained an XGBoost classifier on the ULB credit-card dataset (~0.17% fraud) using duplicate removal, hour-of-day 
+transformation, RobustScaler, stratified splitting, and scale_pos_weight.
+• Evaluated with PR-AUC and class-wise metrics, then served versioned FastAPI/Pydantic endpoints for single and 
+batch inference of up to 100 transactions.
+• Built a GitHub Actions pipeline that runs Ruff and Pytest before building and pushing the Docker image to 
+Docker Hub on main.
+Stack: Python, XGBoost, Scikit-learn, Pandas, FastAPI, Pydantic, Pytest, Docker, GitHub Actions
